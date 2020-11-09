@@ -7,11 +7,11 @@ const Width = platform == 'web' ? Dimensions.get('window').width*0.8: Dimensions
 const Height = platform == 'web' ? 40 : 40;
  
 const images = [
-    { title: require('../assets/images/tien-ich/luu-tru.jpg'),content: 'Tin đã lưu'},
-    { title: require('../assets/images/tien-ich/nap-tien.jpg'),content: 'Nạp tiền'},
-    { title: require('../assets/images/tien-ich/sao.jpg'),content: 'Ưu đãi'},
-    { title: require('../assets/images/tien-ich/tin-dac-biet.jpg'),content: 'Tin đặc biệt'},
-    { title: require('../assets/images/tien-ich/tin-quan-tam.jpg'),content: 'Tin quan tâm'}
+    { title: require('../../assets/images/tien-ich/luu-tru.jpg'),content: 'Tin đã lưu'},
+    { title: require('../../assets/images/tien-ich/nap-tien.jpg'),content: 'Nạp tiền'},
+    { title: require('../../assets/images/tien-ich/sao.jpg'),content: 'Ưu đãi'},
+    { title: require('../../assets/images/tien-ich/tin-dac-biet.jpg'),content: 'Tin đặc biệt'},
+    { title: require('../../assets/images/tien-ich/tin-quan-tam.jpg'),content: 'Tin quan tâm'}
 ];
  
 export default class ExtendComponent extends React.Component {

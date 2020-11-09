@@ -20,7 +20,7 @@ export default class BannerComponent extends React.Component{
     constructor(props) {
         super(props)
         this.state= {
-            images : [...image]
+            images : image
         }
     }
 

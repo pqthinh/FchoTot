@@ -28,7 +28,7 @@ export default class ListCategory extends React.Component {
                 }
             )
             .catch(err=> {console.log(err)})
-        } else return
+        }
     }
     render() {
         return (
