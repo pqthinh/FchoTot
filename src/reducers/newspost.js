@@ -20,7 +20,7 @@ export const initialState = {
     nextPage: 1,
 }
 
-export function reducer(state, action) {
+export function reducerNewsPost(state, action) {
     switch (action.type) {
         case types.LOADING:
             return { ...state, loading: true, error: false }

@@ -102,9 +102,9 @@ export default class HeaderComponent extends React.Component{
                     </TouchableOpacity>
                 </View>
                 <SearchHeader
-                    ref = {(searchHeader) => {
-                        this.searchHeader = searchHeader;
-                    }}
+                    // ref = {(searchHeader) => {
+                    //     this.searchHeader = searchHeader;
+                    // }}
                     placeholder = 'Tìm kiếm ...'
                     placeholderColor = 'gray'
                     pinnedSuggestions = {[ `react-native-search-header`, `react-native`, `javascript` ]}

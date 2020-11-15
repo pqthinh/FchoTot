@@ -5,7 +5,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from './src/screens/home'
-import SearchScreen from './src/screens/search'
+// import SearchScreen from './src/screens/search'
+// import LoginScreen from './src/screens/login';
+import WaitingScreen from './src/screens/waitingScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,11 +47,11 @@ export default function AppTest() {
           }}
       >
           <Tab.Screen name="Trang chủ" component={Home} options={{ tabBarBadge: 3 }}/>
-          <Tab.Screen name="Tôi bán" component={SearchScreen}/>
-          <Tab.Screen name="Đăng tin" component={SearchScreen} tabBarOptions = {{tabStyle: {color: 'red'}}}/>
-          <Tab.Screen name="Thông báo" component={SearchScreen}/>
-          <Tab.Screen name="Chat" component={SearchScreen}/>
-          <Tab.Screen name="Thông tin" component={SearchScreen}/>
+          <Tab.Screen name="Tôi bán" component={WaitingScreen}/>
+          <Tab.Screen name="Đăng tin" component={WaitingScreen} tabBarOptions = {{tabStyle: {color: 'red'}}}/>
+          <Tab.Screen name="Thông báo" component={WaitingScreen}/>
+          <Tab.Screen name="Chat" component={WaitingScreen}/>
+          <Tab.Screen name="Thông tin" component={WaitingScreen}/>
 
         </Tab.Navigator>
     </NavigationContainer>  
