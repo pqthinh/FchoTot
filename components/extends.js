@@ -14,27 +14,27 @@ const images = [
     { title: require('../assets/images/tien-ich/tin-dac-biet.jpg'),content: 'Tin đặc biệt'},
     { title: require('../assets/images/tien-ich/tin-quan-tam.jpg'),content: 'Tin quan tâm'}
 ];
-function renderPage(navigation, props) {
-    useEffect(()=> {
-        console.log(props)
-        // console.log(JSON.stringify(navigation))
-    })
-    return (
-        <View key={props.title} style={{  marginRight: platform=='web'? 100: 10, marginLeft: 10,  flexDirection: platform !='web' ? 'row' : '',}}>
-            <TouchableOpacity
-                onPress={()=> navigation.navigate("Bookmarks")}
-            >
-                <View style={styles.box}>
-                    <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={props.title} />
-                    <Text style={styles.text}>{props.content}</Text>
-                </View>
-            </TouchableOpacity>
-        </View>
-        // <Text>Hello</Text>
-    );
-}
+// function renderPage(navigation, props) {
+//     useEffect(()=> {
+//         console.log(props)
+//         // console.log(JSON.stringify(navigation))
+//     })
+//     return (
+//         <View key={props.title} style={{  marginRight: platform=='web'? 100: 10, marginLeft: 10,  flexDirection: platform !='web' ? 'row' : '',}}>
+//             <TouchableOpacity
+//                 onPress={()=> navigation.navigate("Bookmarks")}
+//             >
+//                 <View style={styles.box}>
+//                     <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={props.title} />
+//                     <Text style={styles.text}>{props.content}</Text>
+//                 </View>
+//             </TouchableOpacity>
+//         </View>
+//         // <Text>Hello</Text>
+//     );
+// }
 
-export default function ExtendComponent (navigation) {
+export default function ExtendComponent ({navigation}) {
     return (
         <View style={styles.container}>
             <ScrollView
@@ -43,7 +43,17 @@ export default function ExtendComponent (navigation) {
             >
                 {images.map((x) => {
                     // console.log(x.title)
-                    renderPage(x)
+                    // renderPage(navigation, x)
+                    <View key={x.title} style={{  marginRight: platform=='web'? 100: 10, marginLeft: 10,  flexDirection: platform !='web' ? 'row' : '',}}>
+                        <TouchableOpacity
+                            onPress={()=> navigation.navigate("Bookmarks")}
+                        >
+                            <View style={styles.box}>
+                                <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={x.title} />
+                                <Text style={styles.text}>{x.content}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 })}
             </ScrollView>
         </View>

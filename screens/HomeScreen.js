@@ -6,7 +6,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Category from '../components/category';
 import Banner from '../components/banner'
 import NewsPost from '../components/NewsPost'
-// import ExtendComponent from '../components/extends';
+import SearchScreen from './SearchScreen';
+import ExtendComponent from '../components/extends';
 
 const HomeScreen = ({navigation}) => {
 
@@ -26,12 +27,9 @@ const HomeScreen = ({navigation}) => {
       <ScrollView>
         <View style={styles.container}>
           <Banner />
-          {/* <ExtendComponent/> */}
-          <Button
-            title="Go to details screen"
-            onPress={() => navigation.navigate("Details")}
-          />
-          <Category navigation={navigation}/>
+          <ExtendComponent navigation={navigation}/>
+          {/* <SearchScreen /> */}
+          <Category />
           <NewsPost />
         </View>
       </ScrollView>

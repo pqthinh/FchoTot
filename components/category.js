@@ -6,7 +6,7 @@ const heightImage =  Platform.OS == 'android'? 70: Platform.OS == 'ios'? 60: 150
 const widthCate   =  90
 const DEVICE_WIDTH = Dimensions.get('window').width
 
-export default function Category() {
+export default function Category({navigation}) {
     const [categorys, setCategorys] = useState([])
     useEffect(()=>{
         var newsList = require('../data/category.json')
@@ -19,7 +19,19 @@ export default function Category() {
                 <View >
                     <View style={styles.viewCategory}>
                         {categorys.map(x=> 
-                            <CategoryComponent key= {x.id} cate={x}/>
+                            // <CategoryComponent key= {x.id} navigation={navigation} cate={x}/>
+                            <TouchableOpacity 
+                            onPress={(navigation) => navigation.navigate('HomeStack', { screen: 'Details' })}
+                            key={x.id}
+                            >
+                                <View style={styles.category}>
+                                    <Image
+                                        style={styles.image}
+                                        source={{uri: x.image}}
+                                    />
+                                    <Text style={styles.titleOfImage}>{x.name}</Text>
+                                </View>
+                            </TouchableOpacity>
                         )}
                     </View>
                 </View>
@@ -28,21 +40,21 @@ export default function Category() {
     )
 }
 
-const CategoryComponent = ({navigation,cate}) => {
-    return(
-        <TouchableOpacity 
-        onPress={() => navigation.navigate("Details", {cate})}
-        >
-            <View key={cate.id} style={styles.category}>
-                <Image
-                    style={styles.image}
-                    source={{uri: cate.image}}
-                />
-                <Text style={styles.titleOfImage}>{cate.name}</Text>
-            </View>
-        </TouchableOpacity>
-    )
-}
+// const CategoryComponent = ({navigation,cate}) => {
+//     return(
+//         <TouchableOpacity 
+//         onPress={() => navigation.navigate("Details")}
+//         >
+//             <View key={cate.id} style={styles.category}>
+//                 <Image
+//                     style={styles.image}
+//                     source={{uri: cate.image}}
+//                 />
+//                 <Text style={styles.titleOfImage}>{cate.name}</Text>
+//             </View>
+//         </TouchableOpacity>
+//     )
+// }
 
 const styles = StyleSheet.create({
     category: {
