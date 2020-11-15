@@ -152,13 +152,13 @@ const App = () => {
                       
                       <TextInput
                         placeholder="Tìm kiếm trên Fchotot ... "
-                        onFocus ={()=> {
+                        onChangeText = {data=> setDataQuery(data)}
+                        // value= {current?dataQuery:''}
+                      />
+                      {current? <AntDesign name="search1" size={24} color="black" onPress ={()=> {
                           navigation.navigate('Search', {dataQuery})
                           setCurrent(!current)
-                        }}
-                        onChangeText = {data=> setDataQuery(data)}
-                      />
-                      {!current? <AntDesign name="search1" size={24} color="black"/>: null}
+                        }}/>: null}
                     <TouchableOpacity onPress={() => navigation.navigate('Chat')}> 
                       <AntDesign name="message1" size={24} color="black" style={{marginRight: 10}}/>
                     </TouchableOpacity>

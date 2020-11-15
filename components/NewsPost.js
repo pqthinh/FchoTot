@@ -1,34 +1,13 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import {View, Text, Image, Platform, StyleSheet} from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import TimeAgo from 'react-native-timeago';
 var currencyFormatter = require('currency-formatter')
 
 const heightImage =  Platform.OS == 'android'? 150: Platform.OS == 'ios'? 120: 180
 
-function NewsComponent ({news}) {  
-    // useEffect(()=>{
-    //     console.log(typeof news.anh)
-    // })
-    return (
-        <View style={{borderWidth: 0.25, borderColor: '#e0e0e0', marginRight: 5, marginTop: 5}} key={news.id_tindang}>
-            <Image
-                style={styles.image}
-                source={{uri: news.anh}}
-                title={news.ten} 
-            />
-            <View style={{margin: 5}}>
-                <Text style={styles.titleOfImage}>{news.ten.length> 15 ? Platform.OS == 'web' ? news.ten.slice(0,18) : news.ten.slice(0,15) : news.ten}</Text>
-                <Text style={{fontSize: 12}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
-                <Text style={{fontSize: 12}}>{news.idnguoiban == 1 ? "Pham quang thinh" : "admin" }</Text>
-                <Text style={{fontSize: 12}}>{news.diadiem}</Text>
-                <Text style={{fontSize: 12}}><TimeAgo time={news.ngayban} /></Text>
-            </View>
-        </View>
-    )
-}
-
-export default function ListNewsComponent() {
+export default function ListNewsComponent({navigation}) {
     const [newsposted, setNewsposted] = useState([])
     useEffect(()=>{
         var newsList = require('../data/tindang.json')
@@ -38,8 +17,24 @@ export default function ListNewsComponent() {
         <View style={styles.containerNewsPost}>
             <Text style={styles.DivTitle}>Các tin đã đăng gần đây</Text>
             <View style={styles.viewNewsPosted}>
-                {newsposted.map( x => 
-                    <NewsComponent news={x} key={x.id_tindang}/>
+                {newsposted.map( (news, index) => 
+                    
+                    <TouchableOpacity key={index} onPress={()=> navigation.navigate("Details", {params: {id: news.id_tindang, name: news.ten}})} >
+                        <View style={{borderWidth: 0.25, borderColor: '#e0e0e0', marginRight: 5, marginTop: 5}}>
+                            <Image
+                                style={styles.image}
+                                source={{uri: news.anh}}
+                                title={news.ten} 
+                            />
+                            <View style={{margin: 5}}>
+                                <Text style={styles.titleOfImage}>{news.ten.length> 15 ? Platform.OS == 'web' ? news.ten.slice(0,18) : news.ten.slice(0,15) : news.ten}</Text>
+                                <Text style={{fontSize: 12}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
+                                <Text style={{fontSize: 12}}>{news.idnguoiban == 1 ? "Pham quang thinh" : "admin" }</Text>
+                                <Text style={{fontSize: 12}}>{news.diadiem}</Text>
+                                <Text style={{fontSize: 12}}><TimeAgo time={news.ngayban} /></Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
                 )}
                 
             </View>

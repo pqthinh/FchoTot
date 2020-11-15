@@ -18,11 +18,10 @@ export default function Category({navigation}) {
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <View >
                     <View style={styles.viewCategory}>
-                        {categorys.map(x=> 
-                            // <CategoryComponent key= {x.id} navigation={navigation} cate={x}/>
+                        {categorys.map( (x, index) => (
                             <TouchableOpacity 
-                            onPress={(navigation) => navigation.navigate('HomeStack', { screen: 'Details' })}
-                            key={x.id}
+                                onPress={() => navigation.navigate('ListProduct',{params: {id : x.id, name: x.name}})}
+                                key={index}
                             >
                                 <View style={styles.category}>
                                     <Image
@@ -32,29 +31,13 @@ export default function Category({navigation}) {
                                     <Text style={styles.titleOfImage}>{x.name}</Text>
                                 </View>
                             </TouchableOpacity>
-                        )}
+                        ))}
                     </View>
                 </View>
             </ScrollView>
         </View>
     )
 }
-
-// const CategoryComponent = ({navigation,cate}) => {
-//     return(
-//         <TouchableOpacity 
-//         onPress={() => navigation.navigate("Details")}
-//         >
-//             <View key={cate.id} style={styles.category}>
-//                 <Image
-//                     style={styles.image}
-//                     source={{uri: cate.image}}
-//                 />
-//                 <Text style={styles.titleOfImage}>{cate.name}</Text>
-//             </View>
-//         </TouchableOpacity>
-//     )
-// }
 
 const styles = StyleSheet.create({
     category: {
