@@ -6,12 +6,12 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import Icon from 'react-native-vector-icons/Ionicons';
 import { FontAwesome } from '@expo/vector-icons';
 
-import ExploreScreen from '../screens/ExploreScreen';
 // import ProfileScreen from '../screens/ProfileScreen';
 import HomeStackScreen from './HomeStackScreen'
 import DetailsStackScreen from './DetailsStackScreen'
 import PostNewsScreen from '../screens/PostNewsScreen'
 import SellerPostScreen from '../screens/SellerPost';
+import ExploreStackScreen from './StackExploreScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -77,7 +77,7 @@ const MainTabScreen = () => (
       />
       <Tab.Screen
         name="Explore"
-        component={ExploreScreen}
+        component={ExploreStackScreen}
         options={{
           tabBarLabel: 'Khám phá',
           tabBarColor: '#d02860',
