@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.10.6",
     "@react-navigation/native": "^5.7.5",
     "@react-navigation/stack": "^5.9.2",
@@ -16,22 +17,30 @@
     "expo": "~39.0.2",
     "expo-activity-feed": "^0.9.1",
     "expo-font": "~8.3.0",
+    "expo-image-manipulator": "^8.3.0",
+    "expo-image-picker": "^9.1.1",
+    "expo-image-picker-multiple": "^1.2.4",
     "expo-status-bar": "~1.0.2",
     "moment": "^2.29.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "^0.63.2",
-    "react-native-button": "^3.0.1",
+    "react-native": "^0.63.3",
     "react-native-elements": "^3.0.0-alpha.1",
-    "react-native-gesture-handler": "~1.7.0",
+    "react-native-gesture-handler": "^1.7.0",
+    "react-native-gifted-chat": "^0.16.3",
+    "react-native-image-crop-picker": "^0.35.1",
+    "react-native-image-picker": "^2.3.4",
     "react-native-image-slider": "^2.0.3",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-responsive-screen": "^1.4.1",
     "react-native-screens": "~2.10.1",
     "react-native-search-header": "^0.3.5",
     "react-native-timeago": "^0.5.0",
+    "react-native-upload-image-expo": "^1.2.3",
     "react-native-vector-icons": "^7.1.0",
-    "react-native-web": "~0.13.12"
+    "react-native-video": "^5.1.0-alpha8",
+    "react-native-web": "~0.13.12",
+    "react-navigation": "^4.4.3"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
