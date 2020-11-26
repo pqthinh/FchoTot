@@ -5,6 +5,7 @@ import { AntDesign } from '@expo/vector-icons';
 const SellerPostScreen = ({navigation, props}) =>{
     return (
         <ScrollView>
+            {/* Trang tôi bán / quản lý tin đã đang bán bao gồm cả đã duyệt và đang duyệt */}
             <AntDesign name="back" size={24} color="black" onPress={()=> navigation.goBack()} style={styles.iconExit}/>
             <View style={styles.container}>
                 <View style={styles.container}>

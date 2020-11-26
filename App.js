@@ -13,7 +13,7 @@ import {
   DarkTheme as PaperDarkTheme 
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Searchbar } from 'react-native-paper';
+// import { Searchbar } from 'react-native-paper';
 
 import { DrawerContent } from './screens/DrawerContent';
 import MainTabScreen from './stack/MainTabScreen';
@@ -24,7 +24,7 @@ import BookmarkScreen from './screens/BookmarkScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './stack/RootStackScreen';
 import loginReducer from './reducers/user'
-import { HeaderBackground } from '@react-navigation/stack';
+// import { HeaderBackground } from '@react-navigation/stack';
 
 const Drawer = createDrawerNavigator();
 const DEVICE_WIDTH = Dimensions.get('window').width

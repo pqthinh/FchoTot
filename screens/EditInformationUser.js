@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { List, Avatar , Divider, Paragraph, Title, Caption } from 'react-native-paper';
+import { View, Text, Button, StyleSheet,TextInput } from 'react-native';
+// import { List, Avatar , Divider, Paragraph, Title, Caption } from 'react-native-paper';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -12,17 +12,43 @@ const EditInforationScreen = ({navigation, route}) => {
           <Text>Chỉnh sửa thông tin</Text>
         </View>
         
-        
+        <Text style={{ height: 35, marginTop: 20,marginLeft:10}}> Họ và tên</Text>
+          <TextInput style={{ 
+              height: 40,
+              margin: 10,
+              padding:10,
+              borderColor: 'black',
+              borderWidth: 1
+            }}
+            keyboardType = 'email-address'
+            placeholder = 'Nhập tên của bạn...'
+            placeholderTextColor = 'grey'
+            />
+        <Text style={{ height: 35, marginTop: 20,marginLeft:10}}> Địa chỉ</Text>
+          <TextInput style={{ 
+              height: 40,
+              margin: 10,
+              padding:10,
+              borderColor: 'black',
+              borderWidth: 1
+            }}
+            keyboardType = 'email-address'
+            placeholder = 'Nhập địa chỉ...'
+            placeholderTextColor = 'grey'
+            />
+          <Text style={{ height: 35, marginTop: 20,marginLeft:10}}> Ngày sinh</Text>
+            <TextInput style={{ 
+                height: 40,
+                margin: 10,
+                padding:10,
+                borderColor: 'black',
+                borderWidth: 1
+              }}
+              keyboardType = 'email-address'
+              placeholder = 'dd/mm/yy'
+              placeholderTextColor = 'grey'
+            />
 
-
-        <Button
-            title="Go to home"
-            onPress={() => navigation.navigate("Home")}
-        />
-        <Button
-            title="Go back"
-            onPress={() => navigation.goBack()}
-        />
       </View>
     );
 };

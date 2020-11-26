@@ -8,10 +8,16 @@ import { FontAwesome } from '@expo/vector-icons';
 
 // import ProfileScreen from '../screens/ProfileScreen';
 import HomeStackScreen from './HomeStackScreen'
-import DetailsStackScreen from './DetailsStackScreen'
-import PostNewsScreen from '../screens/PostNewsScreen'
+// import DetailsStackScreen from './DetailsStackScreen'
+// import PostNewsScreen from '../screens/PostNewsScreen'
 import SellerPostScreen from '../screens/SellerPost';
 import ExploreStackScreen from './StackExploreScreen';
+import PostStackScreen from './PostStackScreen';
+
+import {LogBox} from 'react-native'
+import NotificationScreen from '../screens/NotificationScreen';
+LogBox.ignoreAllLogs()
+LogBox.ignoreLogs(['Warning: ...']);
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -28,9 +34,10 @@ const MainTabScreen = () => (
           ),
         }}
       />
+      {/* Man hinh thong bao / thong bao tu server ve trang thai tin / thong bao ve tin theo doi */}
       <Tab.Screen
         name="Notifications"
-        component={DetailsStackScreen}
+        component={NotificationScreen}
         options={{
           tabBarLabel: 'Thông báo',
           tabBarColor: '#1f65ff',
@@ -39,9 +46,10 @@ const MainTabScreen = () => (
           ),
         }}
       />
+      {/* Man hinh dang tin */}
       <Tab.Screen
         name="Post"
-        component={PostNewsScreen}
+        component={PostStackScreen}
         options={{
           tabBarLabel: 'Đăng tin',
           tabBarColor: '#009387',
@@ -64,6 +72,7 @@ const MainTabScreen = () => (
           ),
         }}
       />
+      {/* Man hinh trang toi ban / quan lys tin dang */}
       <Tab.Screen
         name="Profile"
         component={SellerPostScreen}
@@ -75,6 +84,7 @@ const MainTabScreen = () => (
           )
         }}
       />
+      {/* Man hinh trang ca nhan */}
       <Tab.Screen
         name="Explore"
         component={ExploreStackScreen}
