@@ -1,5 +1,4 @@
-import React from 'react'
-import { useEffect, useState } from 'react';
+import React ,{ useEffect, useState }from 'react'
 import {View, Text, Image, Platform, StyleSheet} from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import TimeAgo from 'react-native-timeago';
@@ -7,15 +6,16 @@ var currencyFormatter = require('currency-formatter')
 
 const heightImage =  Platform.OS == 'android'? 150: Platform.OS == 'ios'? 120: 180
 
-export default function ListNewsComponent({navigation}) {
+export default function ListNewsComponent({navigation, newspost, danhmuc}) {
     const [newsposted, setNewsposted] = useState([])
     useEffect(()=>{
-        var newsList = require('../data/tindang.json')
-        setNewsposted(newsList)
+        // var newsList = require('../data/tindang.json')
+        // setNewsposted(newsList)
+        setNewsposted(newspost)
     })
     return (
         <View style={styles.containerNewsPost}>
-            <Text style={styles.DivTitle}>Các tin đã đăng gần đây</Text>
+            <Text style={styles.DivTitle}>{danhmuc}</Text>
             <View style={styles.viewNewsPosted}>
                 {newsposted.map( (news, index) => 
                     
@@ -28,7 +28,7 @@ export default function ListNewsComponent({navigation}) {
                             />
                             <View style={{margin: 5}}>
                                 <Text style={styles.titleOfImage}>{news.ten.length> 15 ? Platform.OS == 'web' ? news.ten.slice(0,18) : news.ten.slice(0,15) : news.ten}</Text>
-                                <Text style={{fontSize: 12}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
+                                <Text style={{fontSize: 12, color: 'red'}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
                                 <Text style={{fontSize: 12}}>{news.idnguoiban == 1 ? "Pham quang thinh" : "admin" }</Text>
                                 <Text style={{fontSize: 12}}>{news.diadiem}</Text>
                                 <Text style={{fontSize: 12}}><TimeAgo time={news.ngayban} /></Text>

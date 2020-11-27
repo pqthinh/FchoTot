@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Image, Dimensions, Text} from 'react-native';
 import ImageSlider from 'react-native-image-slider';
+import ImageModal from 'react-native-image-modal';
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
@@ -18,7 +19,12 @@ export default function BannerComponent ({image}){
                 images={images}
                 customSlide={({ index, item, style, width }) => (
                     <View key={index} >
-                        <Image source={{ uri: item }} style={styles.customImage} />
+                        <ImageModal 
+                            source={{ uri: item }} 
+                            style={styles.customImage} 
+                            resizeMode="contain"
+                            imageBackgroundColor="#000000"
+                        />
                     </View>
                 )}
             />
@@ -35,6 +41,7 @@ const styles = StyleSheet.create({
         width: DEVICE_WIDTH ,
         height: 150,
         alignItems: 'center',
-        resizeMode: 'cover'
+        resizeMode: 'cover',
+       
     },
 });

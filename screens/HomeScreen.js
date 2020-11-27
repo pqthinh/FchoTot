@@ -1,4 +1,4 @@
-import React from 'react'
+import React , {useState, useEffect} from 'react'
 import { View, Text, Button, StyleSheet, StatusBar } from 'react-native'
 import { useTheme } from '@react-navigation/native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -19,14 +19,18 @@ const HomeScreen = ({navigation}) => {
   const { colors } = useTheme();
 
   const theme = useTheme();
-  
+  const [newsposted, setNewsposted] = useState([])
+  useEffect(()=>{
+    var newsList = require('../data/tindang.json')
+    setNewsposted(newsList)
+  })
     return (
       <ScrollView>
         <View style={styles.container}>
           <Banner image={image.imagebanner}/>
           <ExtendComponent navigation={navigation} />
           <Category navigation={navigation} />
-          <NewsPost navigation={navigation} />
+          <NewsPost navigation={navigation} newspost={newsposted} danhmuc={"Các tin đã đăng gần đây"}/>
         </View>
       </ScrollView>
     );

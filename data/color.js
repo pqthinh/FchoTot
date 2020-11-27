@@ -7,3 +7,6 @@ const gradient =  ['#11998e', '#38ef7d ']   // xanh nước biển -> xanh lá
 
 const colorBackground = '#dff2e7'
 // https://uigradients.com/#Quepal
+
+
+const colorButtonChatandCall = "#3c763d"

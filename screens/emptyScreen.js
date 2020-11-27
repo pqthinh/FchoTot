@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 
-const SettingsScreen = ({navigation}) => {
+const EmptyScreen = ({navigation}) => {
     return (
       <View style={styles.container}>
-        {/* Màn hình cài đặt */}
-        <Text>Settings Screen</Text>
+        <Text>Chưa có chức năng này</Text>
         <Button
           title="Trở lại trang trước"
           onPress={() => {navigation.goBack()}}
@@ -14,7 +13,7 @@ const SettingsScreen = ({navigation}) => {
     );
 };
 
-export default SettingsScreen;
+export default EmptyScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -22,4 +21,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center'
   },
+  thongbao: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: 'red'
+  }
 });

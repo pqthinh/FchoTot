@@ -11,6 +11,8 @@ import BookmarkScreen from '../screens/BookmarkScreen';
 import StackScreenChat from './StackScreenChat'
 
 import {LogBox} from 'react-native'
+import ChatDetailsScreen from '../screens/ChatScreen';
+
 LogBox.ignoreAllLogs()
 LogBox.ignoreLogs(['Warning: ...']);
 
@@ -32,6 +34,8 @@ const HomeStackScreen = ({navigation}) => (
         <HomeStack.Screen name="Bookmarks" component={BookmarkScreen} />
         {/* Trang xem danh sach san pham */}
         <HomeStack.Screen name="ListProduct" component={ListProductScreen} />
+        {/* Tu rtanf xem chi tiet san pham chuyen ve trang chat */}
+        <HomeStack.Screen name="ChatDetails" component={ChatDetailsScreen} />
     </HomeStack.Navigator>
 );
 

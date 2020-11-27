@@ -5,7 +5,9 @@ import { AntDesign } from '@expo/vector-icons';
 const ListProductScreen = ({navigation, route}) =>{
     return (
         <ScrollView>
+            
             <AntDesign name="back" size={24} color="black" onPress={()=> navigation.goBack()} style={styles.iconExit}/>
+            <Text>List product / Có thể không dùng đến </Text>
             <View style={styles.container}>
                 <View style={styles.container}>
                     <Image

@@ -1,43 +1,31 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import ListNewsComponent from '../components/NewsPost';
 
 const SearchScreen = ({navigation, route}) => {
+  const [newsposted, setNewsposted] = useState([])
+  useEffect(()=>{
+    var newsList = require('../data/tindang.json')
+    setNewsposted(newsList)
+  })
     return (
       <View>
-        <Text>data: {JSON.stringify(route?.params)}</Text>
-        <Button
-            title="Go to home"
-            onPress={() => navigation.navigate("Home")}
-        />
+        {/* Man hinh tim kiem */}
+        <View>
+          <Text>Hàng lọc dữ liệu</Text>
+        </View>
         <Button
             title="Go back"
             onPress={() => navigation.goBack()}
         />
+        <Text>Tham số truyền vào input: {JSON.stringify(route?.params)}</Text>
+        <ScrollView>
+          <ListNewsComponent newspost={newsposted}  navigation={navigation} danhmuc={"Kết quả tìm kiếm"}/>
+        </ScrollView>
+        
       </View>
     );
 };
   
 export default SearchScreen;
-
-
-// import React, {useState, useEffect} from 'react'
-// import {View, Text} from 'react-native'
-// import { Button } from 'react-native-button'
-
-// const SearchScreen = ({navigation})=> {
-//     // const [data, setData] = useState(null)
-//     return (
-//         <View>
-//             <Text>{JSON.stringify(route?.params)}</Text>
-//             <Button
-//                 style={{fontSize: 20, color: 'green'}}
-//                 styleDisabled={{color: 'red'}}
-//                 onPress={() => navigation.navigate('Chat')}
-//             >
-//                 Go Details sp
-//             </Button>
-//         </View>
-//     );
-// };
-
-// export default SearchScreen
