@@ -1,22 +1,47 @@
 import React, {useState} from 'react'
-import {ScrollView, View, Text, StyleSheet, TouchableOpacity} from 'react-native'
+import {ScrollView, View, Text, StyleSheet, TouchableOpacity , Image} from 'react-native'
 import {Picker} from '@react-native-picker/picker';
 import { TextInput } from 'react-native-paper';
 import Textarea from 'react-native-textarea';
-// import ImagePicker from 'react-native-image-crop-picker';
 import { Feather, Octicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
+const PostNewsScreen = ({navigation, route }) =>{
+    //  Thông tin cần post leen server //
 
-const PostNewsScreen = ({navigation, props}) =>{
     const [theloai, setTheloai] = useState('Cần bán')
     const [danhmuc, setDanhmuc] = useState('Bất động sản')
+
     // const [tenMatHang, setTenMatHang] = useState('')
     const [tinh, setTinh] = useState('Hà Nội')
     const [huyen, setHuyen] = useState('Nam Từ Liêm')
     const [xa, setXa] = useState('Mễ Trì Hạ')
+    // Địa điểm khi post thì concat ---- tinh/ huyen / xa ---- //
+
     const [giaban, setGiaban] = useState(null)
     const [tieude, setTieude] = useState(null)
     const [mieuta, setMieuta]= useState(null)
+
+    // picker images
+
+    const getImage = () =>{
+        if(!route.params?.data) return null
+        var asset = route.params?.data
+        var arr = []
+        asset.map(x => {
+            arr.push(x.uri)
+            return arr
+        })
+        // console.log(arr)
+        return arr;
+    }
+    var arr =  getImage()
+    // console.log(arr)
+    const [images, setImage] = useState(getImage)
+    // const [images, setImages] = useState(null)
+    // setImages(arr)
+    // console.log(images)
+    // Lấy ảnh thành công // Xem laij setState ?
 
     return (
         <View style={styles.container}>
@@ -88,6 +113,18 @@ const PostNewsScreen = ({navigation, props}) =>{
                     // {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
                     // submit
                     // preview tin   // tai su dung tu man  hinh chi tiet tin */}
+
+                    <View  style={styles.uploadimage}>
+                        <MaterialIcons onPress={()=>  navigation.navigate("pickerimage")} name="add-a-photo" size={60} color="black" />
+                        <View style={styles.imagePost}>
+                        {
+                            images?.map(url=> (
+                                <Image key={url} source={{uri: url}} style={{width: 120, height: 100 , marginHorizontal: 10, marginVertical: 10}} />
+                            ))
+                        }
+                        </View>
+                    </View>    
+
                     <TextInput
                         label="Chọn tiêu đề: "
                         value={tieude}
@@ -115,6 +152,8 @@ const PostNewsScreen = ({navigation, props}) =>{
                         placeholder={'Nhập nội dung bài đăng ... '}
                         placeholderTextColor={'#c7c7c7'}
                         underlineColorAndroid={'transparent'}
+                        backgroundColor = {'#f0f0f0'}
+                        height= {120}
                     />
                     <View style={styles.row}>
                         <TouchableOpacity onPress={()=> console.log("dang tin")} style={styles.submit}>
@@ -172,10 +211,24 @@ const styles = StyleSheet.create({
         borderRadius: 5, 
         height: 50,
         // backgroundColor: '#52c7b8'
+        backgroundColor: '#f0f0f0'
     },
     submit: {
         backgroundColor: '#52c7b8',
         alignItems: 'center',
         padding: 10
+    },
+    uploadimage: {
+        justifyContent: "center",
+        flex: 0.5,
+        marginHorizontal: 10,
+        backgroundColor: '#f0f0f0'
+    },
+    imagePost :{
+        flexDirection: 'row',
+        flexWrap: "wrap" ,
+        marginHorizontal: 10,
+        marginVertical: 10,
+        
     }
 })

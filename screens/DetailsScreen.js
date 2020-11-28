@@ -13,10 +13,19 @@ import { Banner } from 'react-native-paper';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 const DetailsScreen = ({navigation, route}) => {
+
+  // Tham so truyen vao route 
+
+  if(route.params.news) {
+
+  }
+  
   const [images, setImages] = useState([])
+
   useEffect(() => {
     setImages(image.imageproduct)
   })
+
   // console.log(images)
     return (
       <View style={styles.container}>
