@@ -1,7 +1,7 @@
-import { AssetsSelector } from 'expo-images-picker'
 import React from 'react'
+import { AssetsSelector } from 'expo-images-picker'
 import {Ionicons} from '@expo/vector-icons'
-import {View, Text, ScrollView} from 'react-native'
+import {SafeAreaView, Text, StyleSheet} from 'react-native'
 
 export default function PickerImage({navigation}) {
     const onDone = (data) => {
@@ -12,8 +12,7 @@ export default function PickerImage({navigation}) {
         navigation.goBack()
     }
     return (
-        <View>
-            <ScrollView>
+        <SafeAreaView style={ styles.container}>
             <Text>Chọn ảnh cho tin đăng</Text>
             <AssetsSelector
                 options={{
@@ -24,7 +23,7 @@ export default function PickerImage({navigation}) {
                     portraitCols: 4,
                     landscapeCols: 5,
                     widgetWidth: 100,
-                    widgetBgColor: "black",
+                    widgetBgColor: "#BDC3C7",
                     selectedBgColor: "#f0f0f0",
                     videoIcon: {
                         Component: Ionicons,
@@ -42,15 +41,20 @@ export default function PickerImage({navigation}) {
                     defaultTopNavigator: {
                         continueText: 'Finish',
                         goBackText: 'Back',
-                        buttonBgColor: "#000",
-                        buttonTextColor: "#ffffff50",
-                        midTextColor: "black",
+                        buttonBgColor: "#1BBC9B",
+                        buttonTextColor: "#ECF0F1",
+                        midTextColor: "#ECF0F1",
                         backFunction: goBack,
                         doneFunction: data => onDone(data),
                     }
                 }}
             />
-            </ScrollView>
-        </View>
+            </SafeAreaView>
     )
 }
+
+const styles =  StyleSheet.create({
+    container: {
+        flex:1
+    }
+})

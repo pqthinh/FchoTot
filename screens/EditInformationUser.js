@@ -7,7 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 const EditInforationScreen = ({navigation, route}) => {
     return (
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 20}}>
           <MaterialCommunityIcons name="keyboard-backspace" size={24} color="black" onPress={() => {navigation.goBack()}}/>
           <Text>Chỉnh sửa thông tin</Text>
         </View>
@@ -58,7 +58,7 @@ export default EditInforationScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center'
+    // alignItems: 'center', 
+    // justifyContent: 'center'
   },
 });

@@ -1,10 +1,14 @@
-import React, {useState} from 'react'
-import {ScrollView, View, Text, StyleSheet, TouchableOpacity , Image} from 'react-native'
+import React, {useState, useEffect} from 'react'
+import {ScrollView, View, Text, StyleSheet, TouchableOpacity , Image, PushNotificationIOS} from 'react-native'
 import {Picker} from '@react-native-picker/picker';
 import { TextInput } from 'react-native-paper';
-import Textarea from 'react-native-textarea';
+
 import { Feather, Octicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+
+import {LogBox} from 'react-native'
+LogBox.ignoreAllLogs()
+LogBox.ignoreLogs(['Warning: ...'])
 
 const PostNewsScreen = ({navigation, route }) =>{
     //  Thông tin cần post leen server //
@@ -23,36 +27,50 @@ const PostNewsScreen = ({navigation, route }) =>{
     const [mieuta, setMieuta]= useState(null)
 
     // picker images
+    const [images, setImages] = useState([])
 
     const getImage = () =>{
-        if(!route.params?.data) return null
-        var asset = route.params?.data
-        var arr = []
-        asset.map(x => {
-            arr.push(x.uri)
-            return arr
-        })
-        // console.log(arr)
-        return arr;
+        if(!route.params) return []
+        const {data} = route.params
+        return data
     }
-    var arr =  getImage()
-    // console.log(arr)
-    const [images, setImage] = useState(getImage)
-    // const [images, setImages] = useState(null)
-    // setImages(arr)
-    // console.log(images)
-    // Lấy ảnh thành công // Xem laij setState ?
-
+    // getImage()
+    useEffect(()=>{
+        setImages(getImage())
+    },[route.params])
+    // Lấy ảnh thành công // 
+    const news = {
+        loai: theloai,
+        danhmuc: danhmuc,
+        diadiem: xa+ " "+ huyen + " "+ tinh,
+        giaban: giaban,
+        tieude: tieude,
+        mieuta: mieuta,
+        anh: images
+    }
+    const checkValidation = () =>{
+        if(!theloai || !danhmuc || !xa || !huyen|| !tinh || !giaban || !tieude || !mieuta || !anh) {
+            alert("Bạn phải điền đủ thông tin để đăng bài") 
+            return false
+        }
+        return true
+    }
+    const uploadTin = ()=>{
+        
+    }
     return (
         <View style={styles.container}>
             <View style={[styles.top , {backgroundColor: '#52c7b8', marginHorizontal: 5 , padding: 10}]}>
                 <Feather name="x" size={24} color="black" onPress={()=> navigation.goBack()}/>
                 <Text > Tạo tin đăng bán</Text>
-                <Octicons name="eye" size={24} color="black" onPress={()=> navigation.navigate("Preview")}/>
+                <Octicons name="eye" size={24} color="black" onPress={()=> {
+                        if(checkValidation)
+                            navigation.navigate("Preview", {params: {news}})
+                    }}/>
             </View>
             <View>
                 <ScrollView>
-                    <TouchableOpacity style={[styles.row, styles.touchinput ]}>
+                    <TouchableOpacity style={[styles.row, styles.touchinput , styles.singleline]}>
                         <Text>Loại tin đăng: </Text>
                         <Picker
                             selectedValue= {theloai}
@@ -64,7 +82,7 @@ const PostNewsScreen = ({navigation, route }) =>{
                         </Picker>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={ [styles.row, styles.touchinput]}>
+                    <TouchableOpacity style={ [styles.row, styles.touchinput, styles.singleline]}>
                         <Text>Chọn danh mục tin: </Text>
                         <Picker
                             selectedValue= {danhmuc}
@@ -92,34 +110,33 @@ const PostNewsScreen = ({navigation, route }) =>{
                     <TextInput
                         label="Thành phố /Tỉnh: "
                         value={tinh}
-                        style={[styles.row]}
+                        style={[styles.singleline,styles.row]}
                         onChangeText={text => setTinh(text)}
                     />
                     <TextInput
                         label="Quận /Huyện: "
                         value={huyen}
-                        style={[styles.row]}
+                        style={[styles.singleline,styles.row]}
                         onChangeText={text => setHuyen(text)}
                     />
                     <TextInput
                         label="Phường /Xã: "
                         value={xa}
-                        style={[styles.row]}
+                        style={[styles.singleline,styles.row]}
                         onChangeText={text => setXa(text)}
                     />
 
-                    {/* Chon anh cho tin
-                    mô tả tin đăng
-                    // {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-                    // submit
-                    // preview tin   // tai su dung tu man  hinh chi tiet tin */}
-
+                    {/* Fetch iamge // dang bi loi */}
                     <View  style={styles.uploadimage}>
-                        <MaterialIcons onPress={()=>  navigation.navigate("pickerimage")} name="add-a-photo" size={60} color="black" />
+                        <MaterialIcons onPress={()=>  {
+                                setImages([])
+                                navigation.navigate("pickerimage")
+                            }} 
+                            name="add-a-photo" size={60} color="black" />
                         <View style={styles.imagePost}>
                         {
-                            images?.map(url=> (
-                                <Image key={url} source={{uri: url}} style={{width: 120, height: 100 , marginHorizontal: 10, marginVertical: 10}} />
+                            images?.map(x=> (
+                                <Image key={x.id} source={{uri: x.uri}} style={{width: 120, height: 100 , marginHorizontal: 10, marginVertical: 10}} />
                             ))
                         }
                         </View>
@@ -128,7 +145,7 @@ const PostNewsScreen = ({navigation, route }) =>{
                     <TextInput
                         label="Chọn tiêu đề: "
                         value={tieude}
-                        style={[styles.row]}
+                        style={[styles.singleline,styles.row]}
                         onChangeText={text => setTieude(text)}
                         underlineColorAndroid={'transparent'}
                     />
@@ -136,27 +153,18 @@ const PostNewsScreen = ({navigation, route }) =>{
                     <TextInput
                         label="Định giá tin đăng: "
                         value={giaban}
-                        style={styles.row}
+                        style={[styles.singleline, styles.row]}
                         onChangeText={text => setGiaban(text)}
                         underlineColorAndroid={'transparent'}
                     />
+                    <TextInput multiline style={[styles.multiline, styles.row]} value={mieuta} 
+                        onChangeText={text => setMieuta(text)} label={"Miêu tả nội dung: " } numberOfLines={10}/>
                     
-                    <Textarea
-                        label="Miêu tả nội dung: "
-                        value={mieuta}
-                        style={styles.row}
-                        onChangeText={text => setMieuta(text)}
-                        // onChangeText={this.onChange}
-                        // defaultValue={this.state.text}
-                        maxLength={500}
-                        placeholder={'Nhập nội dung bài đăng ... '}
-                        placeholderTextColor={'#c7c7c7'}
-                        underlineColorAndroid={'transparent'}
-                        backgroundColor = {'#f0f0f0'}
-                        height= {120}
-                    />
                     <View style={styles.row}>
-                        <TouchableOpacity onPress={()=> console.log("dang tin")} style={styles.submit}>
+                        <TouchableOpacity onPress={()=> {
+                                uploadTin()
+                            }} 
+                            style={styles.submit}>
                             <Text>Đăng tin</Text>
                         </TouchableOpacity>
                     </View>
@@ -209,9 +217,13 @@ const styles = StyleSheet.create({
         padding: 5,
         backgroundColor: '#fff',
         borderRadius: 5, 
-        height: 50,
-        // backgroundColor: '#52c7b8'
         backgroundColor: '#f0f0f0'
+    },
+    multiline: {
+        height: 150,
+    },
+    singleline: {
+        height: 50,
     },
     submit: {
         backgroundColor: '#52c7b8',
@@ -222,7 +234,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         flex: 0.5,
         marginHorizontal: 10,
-        backgroundColor: '#f0f0f0'
+        backgroundColor: '#f0f0f0',
+        width: "90%",
+        marginHorizontal: 20,
     },
     imagePost :{
         flexDirection: 'row',

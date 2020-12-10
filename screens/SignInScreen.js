@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     View, 
     Text, 
@@ -8,29 +8,32 @@ import {
     StyleSheet ,
     StatusBar,
     Alert,
-    ScrollView
+    ScrollView,
+    ActivityIndicator
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-
+import { MaterialIcons } from '@expo/vector-icons';
+import axios from 'axios'
 import { useTheme } from 'react-native-paper';
-
+// import {baseUrl} from '../http'
 import { AuthContext } from '../components/context';
-
-import Users from '../model/users';
+const baseUrl = "https://vast-shore-33582.herokuapp.com"
+// import Users from '../model/users';
 
 const SignInScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
-        username: '',
+        email: '',
         password: '',
         check_textInputChange: false,
         secureTextEntry: true,
         isValidUser: true,
         isValidPassword: true,
     });
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
 
     const { colors } = useTheme();
 
@@ -40,14 +43,14 @@ const SignInScreen = ({navigation}) => {
         if( val.trim().length >= 4 ) {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: true,
                 isValidUser: true
             });
         } else {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: false,
                 isValidUser: false
             });
@@ -55,7 +58,7 @@ const SignInScreen = ({navigation}) => {
     }
 
     const handlePasswordChange = (val) => {
-        if( val.trim().length >= 8 ) {
+        if( val.trim().length >= 4 ) {
             setData({
                 ...data,
                 password: val,
@@ -77,8 +80,14 @@ const SignInScreen = ({navigation}) => {
         });
     }
 
+    const validate = (email) => {
+        const expression = /(?!.*\.{2})^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([\t]*\r\n)?[\t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([\t]*\r\n)?[\t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+    
+        return expression.test(String(email).toLowerCase())
+    }
+
     const handleValidUser = (val) => {
-        if( val.trim().length >= 4 ) {
+        if( validate(val) ) {
             setData({
                 ...data,
                 isValidUser: true
@@ -94,34 +103,49 @@ const SignInScreen = ({navigation}) => {
     const guestLogin = () =>{
         const foundUser = {
             email: "user1@email.com",
-            id: 1,
+            id: 0,
             password: "password",
             userToken: "token123",
             username: "user1",
+            role: "guest"
         }
         signIn([foundUser]);
     }
 
-    const loginHandle = (userName, password) => {
+    const loginHandle = (email, password) => {
         
-        const foundUser = Users.filter( item => {
-            return userName == item.username && password == item.password;
-        } );
-
-        if ( data.username.length == 0 || data.password.length == 0 ) {
+        setError(null)
+        setLoading(true)
+        var user 
+        if ( data.email.length == 0 || data.password.length == 0 ) {
             Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
                 {text: 'Okay'}
             ]);
+            setLoading(false)
             return;
         }
-
-        if ( foundUser.length == 0 ) {
-            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-                {text: 'Okay'}
-            ]);
-            return;
-        }
-        signIn(foundUser);
+        axios.post(`${baseUrl}/user/login`, {email, password})
+        .then(res=>{
+            setLoading(false)
+            // alert(JSON.stringify(res.data))
+            
+            user = res.data
+            user.token = "pqthinh"
+            console.log(user)
+        })
+        .catch(error => {
+            setLoading(false)
+            if (error.response.status === 401) setError(error.response.data.message)
+            else setError("Something went wrong. Please try again later.")
+        })
+        signIn(user);
+        // if ( foundUser.length == 0 ) {
+        //     Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+        //         {text: 'Okay'}
+        //     ]);
+        //     return;
+        // }
+        
     }
 
     return (
@@ -138,16 +162,15 @@ const SignInScreen = ({navigation}) => {
         >
             <ScrollView>
                 <Text style={[styles.text_footer, {
+                        color: "red"
+                    }]}>{error}</Text>
+                <Text style={[styles.text_footer, {
                     color: colors.text
-                }]}>Username</Text>
+                }]}>Email</Text>
                 <View style={styles.action}>
-                    <FontAwesome 
-                        name="user-o"
-                        color={colors.text}
-                        size={20}
-                    />
+                    <MaterialIcons name="email" size={20} color="black" />
                     <TextInput 
-                        placeholder="Your Username"
+                        placeholder="Your email"
                         placeholderTextColor="#666666"
                         style={[styles.textInput, {
                             color: colors.text
@@ -170,7 +193,7 @@ const SignInScreen = ({navigation}) => {
                 </View>
                 { data.isValidUser ? null : 
                 <Animatable.View animation="fadeInLeft" duration={500}>
-                    <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                    <Text style={styles.errorMsg}>Email không hợp lệ.</Text>
                 </Animatable.View>
                 }
                 
@@ -215,7 +238,7 @@ const SignInScreen = ({navigation}) => {
                 </View>
                 { data.isValidPassword ? null : 
                 <Animatable.View animation="fadeInLeft" duration={500}>
-                <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
+                <Text style={styles.errorMsg}>Mật khẩu phải có ít nhất 4 ký tự.</Text>
                 </Animatable.View>
                 }
                 
@@ -224,9 +247,10 @@ const SignInScreen = ({navigation}) => {
                     <Text style={{color: '#009387', marginTop:15}}>Forgot password?</Text>
                 </TouchableOpacity>
                 <View style={styles.button}>
+                    {loading? <ActivityIndicator size="large" color="#00ff00" /> : 
                     <TouchableOpacity
                         style={styles.signIn}
-                        onPress={() => {loginHandle( data.username, data.password )}}
+                        onPress={() => {loginHandle( data.email, data.password )}}
                     >
                         <LinearGradient
                             colors={['#08d4c4', '#01ab9d']}
@@ -237,7 +261,7 @@ const SignInScreen = ({navigation}) => {
                             }]}>Sign In</Text>
                         </LinearGradient>
                     </TouchableOpacity>
-
+                    }
                     <TouchableOpacity
                         onPress={() => navigation.navigate('SignUpScreen')}
                         style={[styles.signIn, {
@@ -245,12 +269,13 @@ const SignInScreen = ({navigation}) => {
                             borderWidth: 1,
                             marginTop: 15
                         }]}
-                    >
-                        <Text style={[styles.textSign, {
-                            color: '#009387'
-                        }]}>Sign Up</Text>
+                    >   
+                            <Text style={[styles.textSign, {
+                                color: '#009387'
+                            }]}>Sign Up</Text>
+                        
                     </TouchableOpacity>
-
+                    
                     <TouchableOpacity
                         style={styles.signIn}
                         onPress={() => {guestLogin()}}

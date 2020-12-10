@@ -264,3 +264,20 @@ const styles = StyleSheet.create({
 //         height: 35
 //     }
 // });
+
+//text area
+import Textarea from 'react-native-textarea';
+{/* <Textarea
+        label="Miêu tả nội dung: "
+        value={mieuta}
+        style={styles.row}
+        onChangeText={text => setMieuta(text)}
+        // onChangeText={this.onChange}
+        // defaultValue={this.state.text}
+        maxLength={500}
+        placeholder={'Nhập nội dung bài đăng ... '}
+        placeholderTextColor={'#c7c7c7'}
+        underlineColorAndroid={'transparent'}
+        backgroundColor = {'#f0f0f0'}
+        height= {120}
+    /> */}

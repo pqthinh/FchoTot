@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     View, 
     Text, 
@@ -15,19 +15,32 @@ import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { Switch } from 'react-native-paper';
+import Axios from 'axios';
+import { AuthContext } from '../components/context';
+// import {baseUrl} from '../http'
+const baseUrl = "https://vast-shore-33582.herokuapp.com"
 
 const SignInScreen = ({navigation}) => {
-
+    const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+    const { signIn } = React.useContext(AuthContext);
     const [data, setData] = React.useState({
         username: '',
+        email: '',
+        phone: '',
         password: '',
         confirm_password: '',
+        role: '',
         check_textInputChange: false,
+        check_textEmailChange: false,
+        check_textPhoneChange: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
     });
-
-    const textInputChange = (val) => {
+    const [error, setError] = useState(null)
+    const textInputNameChange = (val) => {
         if( val.length !== 0 ) {
             setData({
                 ...data,
@@ -39,6 +52,48 @@ const SignInScreen = ({navigation}) => {
                 ...data,
                 username: val,
                 check_textInputChange: false
+            });
+        }
+    }
+
+    const validate = (email) => {
+        const expression = /(?!.*\.{2})^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([\t]*\r\n)?[\t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([\t]*\r\n)?[\t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+    
+        return expression.test(String(email).toLowerCase())
+    }
+
+    const textInputEmailChange = (val) => {
+        if( validate(val) ) {
+            setData({
+                ...data,
+                email: val,
+                check_textEmailChange: true
+            });
+        } else {
+            setData({
+                ...data,
+                email: val,
+                check_textEmailChange: false
+            });
+        }
+    }
+
+    const isVietnamesePhoneNumber = (number)=> {
+        return /(03|07|08|09|01[2|6|8|9])+([0-9]{8})\b/.test(number);
+    }
+
+    const textInputPhoneChange = (val) => {
+        if( isVietnamesePhoneNumber(val) ) {
+            setData({
+                ...data,
+                phone: val,
+                check_textPhoneChange: true
+            });
+        } else {
+            setData({
+                ...data,
+                phone: val,
+                check_textPhoneChange: false
             });
         }
     }
@@ -57,6 +112,14 @@ const SignInScreen = ({navigation}) => {
         });
     }
 
+    const handleRoleChange = () => {
+        setIsSwitchOn(!isSwitchOn)
+        setData({
+            ...data,
+            role: isSwitchOn ? "buyer": "seller",
+        });
+    }
+
     const updateSecureTextEntry = () => {
         setData({
             ...data,
@@ -71,6 +134,40 @@ const SignInScreen = ({navigation}) => {
         });
     }
 
+    const SignUp = () =>{
+        
+        if(!data.check_textEmailChange || !data.check_textInputChange || !data.check_textPhoneChange || !data.password || !data.confirm_password)
+            setError("Bạn phải điền thiếu hoặc sai thông tin")
+        else if(data.password !== data.confirm_password){
+            setError("Mật khẩu không khớp")
+        } else {
+            // post lên server
+            setError(null)
+            const user = {
+                name: data.username,
+                email: data.email,
+                phone: data.phone,
+                password: data.password,
+                role: data.role,
+            }
+            var resp
+            Axios.post(`${baseUrl}/user/create`, {user})
+            .then(res=>{
+                console.log(res.data)
+                resp= res.data
+                resp.token = "pqthinh"
+                
+            })
+            .catch(error =>{
+                if (error.response.status === 401) setError(error.response.data.message)
+                else setError("Có lỗi hệ thống xảy ra")
+                return
+            })
+            // console.log(data)
+            // signIn(resp)
+        }
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content"/>
@@ -82,6 +179,7 @@ const SignInScreen = ({navigation}) => {
                 style={styles.footer}
             >
                 <ScrollView>
+                <Text style={styles.text_footer}>{error}</Text>
                 <Text style={styles.text_footer}>Username</Text>
                 <View style={styles.action}>
                     <FontAwesome 
@@ -90,12 +188,56 @@ const SignInScreen = ({navigation}) => {
                         size={20}
                     />
                     <TextInput 
-                        placeholder="Your Username"
+                        placeholder="Họ tên ..."
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => textInputChange(val)}
+                        onChangeText={(val) => textInputNameChange(val)}
                     />
                     {data.check_textInputChange ? 
+                    <Animatable.View
+                        animation="bounceIn"
+                    >
+                        <Feather 
+                            name="check-circle"
+                            color="green"
+                            size={20}
+                        />
+                    </Animatable.View>
+                    : null}
+                </View>
+
+                <Text style={styles.text_footer}>Email</Text>
+                <View style={styles.action}>
+                    <MaterialIcons name="email" size={24} color="black" />
+                    <TextInput 
+                        placeholder="Email của bạn"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val) => textInputEmailChange(val)}
+                    />
+                    {data.check_textEmailChange ? 
+                    <Animatable.View
+                        animation="bounceIn"
+                    >
+                        <Feather 
+                            name="check-circle"
+                            color="green"
+                            size={20}
+                        />
+                    </Animatable.View>
+                    : null}
+                </View>
+
+                <Text style={styles.text_footer}>Phone</Text>
+                <View style={styles.action}>
+                    <AntDesign name="phone" size={24} color="black" />
+                    <TextInput 
+                        placeholder="SĐT của bạn ..."
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val) => textInputPhoneChange(val)}
+                    />
+                    {data.check_textPhoneChange ? 
                     <Animatable.View
                         animation="bounceIn"
                     >
@@ -118,7 +260,7 @@ const SignInScreen = ({navigation}) => {
                         size={20}
                     />
                     <TextInput 
-                        placeholder="Your Password"
+                        placeholder="Nhập mật khẩu"
                         secureTextEntry={data.secureTextEntry ? true : false}
                         style={styles.textInput}
                         autoCapitalize="none"
@@ -153,7 +295,7 @@ const SignInScreen = ({navigation}) => {
                         size={20}
                     />
                     <TextInput 
-                        placeholder="Confirm Your Password"
+                        placeholder="Xác nhận mật khẩu"
                         secureTextEntry={data.confirm_secureTextEntry ? true : false}
                         style={styles.textInput}
                         autoCapitalize="none"
@@ -177,18 +319,24 @@ const SignInScreen = ({navigation}) => {
                         }
                     </TouchableOpacity>
                 </View>
+
+                <View style={styles.action}>
+                    <Switch value={isSwitchOn} onValueChange={handleRoleChange}/>
+                    <Text>Bạn muốn trở thành người đăng tin</Text>
+                </View>
+                
                 <View style={styles.textPrivate}>
                     <Text style={styles.color_textPrivate}>
-                        By signing up you agree to our
+                        Đăng ký tài khoản là đồng ý với các điều khoản của chúng tôi về
                     </Text>
-                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Terms of service</Text>
-                    <Text style={styles.color_textPrivate}>{" "}and</Text>
-                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Privacy policy</Text>
+                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Điều khoản dịch vụ</Text>
+                    <Text style={styles.color_textPrivate}>{" "}và</Text>
+                    <Text style={[styles.color_textPrivate, {fontWeight: 'bold'}]}>{" "}Chính sách bảo mật</Text>
                 </View>
                 <View style={styles.button}>
                     <TouchableOpacity
                         style={styles.signIn}
-                        onPress={() => {}}
+                        onPress={() => SignUp() }
                     >
                     <LinearGradient
                         colors={['#08d4c4', '#01ab9d']}

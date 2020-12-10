@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet , Image } from 'react-native';
+import { View, Text, Button, StyleSheet , Image , Linking} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import ImageSlider from 'react-native-image-slider';
 import { Divider  , Avatar, Card } from 'react-native-paper';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 // import Banner from '../components/banner'
 
 import image from '../data/banner'
-import { Banner } from 'react-native-paper';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 const DetailsScreen = ({navigation, route}) => {
 
   // Tham so truyen vao route 
-
-  if(route.params.news) {
-
-  }
+  // Sua lai trang thai tu tham so truyen vao
   
+  // if(route?.params.news) {
+  //   console.log(JSON.stringify(route.params.news.params.news))
+  // }
+
   const [images, setImages] = useState([])
 
   useEffect(() => {
@@ -90,19 +91,26 @@ const DetailsScreen = ({navigation, route}) => {
           </ScrollView>
         </View>
         <View style={{flexDirection:"row" , justifyContent: 'space-between', height: 40}}>
-            <TouchableOpacity style={{flexDirection: "row", backgroundColor: '#3c763d', paddingHorizontal: 10, alignItems: 'center', paddingVertical: 10}} onPress={()=> alert("Call cho nguoi ban ofline")}>
+            <TouchableOpacity style={{flexDirection: "row", backgroundColor: '#16a085',   paddingHorizontal: 10, alignItems: 'center', paddingVertical: 10}} 
+              onPress={()=> Linking.openURL("tel: 0866564502")}>
               <Ionicons name="ios-call" style={{paddingRight: 10}} size={24} color="#fff" />
-              <Text style={{color: '#fff'}}>Gọi cho người bán</Text>
+              <Text style={{color: '#fff'}}>Gọi điện</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={{flexDirection: "row", color: '#3c763d', paddingHorizontal: 10, alignItems: 'center', paddingVertical: 10}} 
+              onPress={()=> Linking.openURL("sms: 0866564502")}>
+              <FontAwesome5 name="sms" size={24} color="3c763d" style={{paddingRight: 10}}/>
+              <Text style={{color: 'black'}}>Nhắn tin</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={{flexDirection: "row", backgroundColor: '#16a085', paddingHorizontal: 10, alignItems: 'center', paddingVertical: 10}} 
               onPress={()=> {
-                alert("Call cho nguoi ban ofline")
-                navigation.navigate('ChatDetails', {title: "Pham Quang Thinh", phone: "012345678"})
+                alert("Chat online")
+                navigation.navigate('ChatDetails', {title: "Pham Quang Thinh", phone: "0866564502"})
               }}
             >
-              <AntDesign name="wechat" style={{paddingRight: 10}} size={24} color="#3c763d" />
-              <Text style={{color: '#3c763d'}}>Chat cho người bán</Text>
+              <AntDesign name="wechat" style={{paddingRight: 10}} size={24} color="#fff" />
+              <Text style={{color: "#fff"}}>Chat online</Text>
             </TouchableOpacity>
         </View>
       </View>

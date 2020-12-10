@@ -24,10 +24,20 @@ import BookmarkScreen from './screens/BookmarkScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './stack/RootStackScreen';
 import loginReducer from './reducers/user'
+// import { ScrollView } from 'react-native-gesture-handler';
+// import LocationComponent from './components/location';
 // import { HeaderBackground } from '@react-navigation/stack';
 
 const Drawer = createDrawerNavigator();
 const DEVICE_WIDTH = Dimensions.get('window').width
+
+// const App = () =>{
+//   return(
+//     <ScrollView>
+//       <LocationComponent />
+//     </ScrollView>
+//   )
+// }
 
 const App = () => {
   // const [isLoading, setIsLoading] = React.useState(true);
