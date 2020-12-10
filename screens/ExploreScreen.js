@@ -1,19 +1,31 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import { List, Avatar , Card ,Divider } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import flatListData from '../data/explore';
 
 const ExploreScreen = ({navigation}) => {
+  const [currentUser, setCurrentUser] = useState({})
+  useEffect(()=> {
+    AsyncStorage.getItem('currentuser', (errs, res)=>{
+        if (!errs) {
+            if (res !== null) {
+              setCurrentUser(JSON.parse(res))
+            }
+         }
+    })
+    
+  },[])
     return (
       <ScrollView>
         <List.Section>
         <Divider />
         <Card.Title
-            title={<Text style={styles.user}>Pham Quang Thinh</Text>}
+            title={<Text style={styles.user}>{currentUser.name}</Text>}
             subtitle={<Text style={styles.edit} onPress={()=> navigation.navigate('Profile')}>Xem trang cá nhân</Text>}
-            left={(props) => <Avatar.Image {...props} size={50} source={require('../assets/icon.png')} />}
+            left={(props) => <Avatar.Image {...props} size={50} source={{uri : currentUser.avatar}} />}
             right={(props) => <Feather {...props} name="more-vertical" size={24} color="black" />}
           />
         </List.Section>

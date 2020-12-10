@@ -26,41 +26,20 @@ export function DrawerContent(props) {
     const paperTheme = useTheme();
     const { signOut, toggleTheme } = React.useContext(AuthContext);
     const [user, setUser] = useState({})
-    // console.log(SyncStorage.get("current"))
-    const getData = async () => {
-        try {
-            // const jsonValue = await AsyncStorage.getAllKeys()
-            const jsonValue = await AsyncStorage.getItem('currentuser')
-            jsonValue != null ? JSON.parse(jsonValue) : null
-            setUser(JSON.parse(jsonValue))
-            return jsonValue
-        } catch(e) {
-            console.log(e)
-            return null
-        }
-    }
-    // useEffect(()=> {
-    //     const jsonValue = getData()
-    //     setUser(jsonValue)
-    // },[])
-    var temp ={}
-    getData()
-    // .then(res => {
-    //     console.log(res)
-    //     temp = JSON.parse(res)
-    //     console.log("1: "+ temp.name)
-    // })
-    // .catch(err=>{
-    //     temp={}
-    //     console.log(err)
-    // })
 
-    // console.log("temp: "+ temp)
+    // console.log(SyncStorage.get("current"))
+    
+    useEffect(()=> {
+        AsyncStorage.getItem('currentuser', (errs, res)=>{
+            if (!errs) {
+                if (res !== null) {
+                    setUser(JSON.parse(res))
+                }
+             }
+        })
+        
+    },[])
     let u = user
-    // const u = JSON.parse(user)
-    // console.log("jhaw: "+  user)
-    // setUser(u)
-    // {"id":6,"name":"phan thinh","email":"thinh1@edu.vn","mobile":"0998765327","password":"thinh","status":"pendding","role":"seller","avatar":"https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png","follower":10,"following":5,"create_at":"2020-12-10T15:49:54.000Z","update_at":"2020-12-10T15:49:54.000Z","userToken":"pqthinh"}
     const data = {
         name:   u.name ,
         email:   u.email,

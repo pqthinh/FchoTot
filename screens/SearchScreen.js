@@ -21,7 +21,7 @@ const SearchScreen = ({navigation, route}) => {
     useEffect(()=>{
       var newsList = require('../data/tindang.json')
       setNewsposted(newsList)
-    }),[]
+    },[])
 
     return (
       <View style={styles.container}>

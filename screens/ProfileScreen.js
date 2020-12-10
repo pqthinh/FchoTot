@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState ,useEffect } from 'react';
 import { View, Text,  StyleSheet ,ScrollView} from 'react-native';
 import { List, Avatar , Divider, Paragraph, Title, Caption } from 'react-native-paper';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import  currentUser  from '../data/currentUser'
+// import  currentUser  from '../data/currentUser'
 
 const ProfileScreen = ({navigation}) => {
+
+    const [currentUser, setCurrentUser] = useState({})
+    useEffect(()=> {
+      AsyncStorage.getItem('currentuser', (errs, res)=>{
+          if (!errs) {
+              if (res !== null) {
+                setCurrentUser(JSON.parse(res))
+              }
+           }
+      })
+      
+    },[])
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -23,7 +36,7 @@ const ProfileScreen = ({navigation}) => {
                 <View style={{flexDirection:'row',marginTop: 15}}>
                     <Avatar.Image 
                         source={{
-                            uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                            uri: currentUser.avatar || 'https://api.adorable.io/avatars/50/abott@adorable.png'
                         }}
                         size={50}
                     />
@@ -44,7 +57,7 @@ const ProfileScreen = ({navigation}) => {
                     </View>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.buttontext} onPress={()=> navigation.navigate("EditInfor")}>Chỉnh sửa thông tin</Text>
+                    <Text style={styles.buttontext} onPress={()=> navigation.navigate("EditInfor", {id: currentUser.id, password: currentUser.password})}>Chỉnh sửa thông tin</Text>
                     <Feather name="more-vertical" size={24} color="black" style={{marginLeft: 100}}/>
                 </View>
             </View>

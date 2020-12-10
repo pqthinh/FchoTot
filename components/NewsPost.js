@@ -7,17 +7,15 @@ var currencyFormatter = require('currency-formatter')
 const heightImage =  Platform.OS == 'android'? 150: Platform.OS == 'ios'? 120: 180
 
 export default function ListNewsComponent({navigation, newspost, danhmuc}) {
-    const [newsposted, setNewsposted] = useState([])
-    useEffect(()=>{
-        // var newsList = require('../data/tindang.json')
-        // setNewsposted(newsList)
-        setNewsposted(newspost)
-    })
+    const [newsposted, setNewsposted] = useState(newspost)
+    const handleImage = (anh) =>{
+        
+    }
     return (
         <View style={styles.containerNewsPost}>
             <Text style={styles.DivTitle}>{danhmuc}</Text>
             <View style={styles.viewNewsPosted}>
-                {newsposted.map( (news, index) => 
+                {newsposted?.map( (news, index) => 
                     
                     <TouchableOpacity key={index} onPress={()=> navigation.navigate("Details", {params: {id: news.id_tindang, name: news.ten}})} >
                         <View style={{borderWidth: 0.25, borderColor: '#e0e0e0', marginRight: 5, marginTop: 5}}>
