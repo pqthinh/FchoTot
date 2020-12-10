@@ -21,7 +21,8 @@ import { Switch } from 'react-native-paper';
 import Axios from 'axios';
 import { AuthContext } from '../components/context';
 // import {baseUrl} from '../http'
-const baseUrl = "https://vast-shore-33582.herokuapp.com"
+// const baseUrl = "https://vast-shore-33582.herokuapp.com"
+const baseUrl = "http://192.168.101.109:3000"
 
 const SignInScreen = ({navigation}) => {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
@@ -143,25 +144,29 @@ const SignInScreen = ({navigation}) => {
         } else {
             // post lên server
             setError(null)
-            const user = {
+            var resp
+            Axios.post(`${baseUrl}/user/create`, {
                 name: data.username,
                 email: data.email,
-                phone: data.phone,
+                mobile: data.phone,
                 password: data.password,
-                role: data.role,
-            }
-            var resp
-            Axios.post(`${baseUrl}/user/create`, {user})
+                role: isSwitchOn ? "buyer": "seller"})
             .then(res=>{
-                console.log(res.data)
+                console.log(res.status)
+                // if(res.statusCode !== 200) {
+                //     setError(res.message|| "có lỗi xảy ra")
+                //     return
+                // }
+                // console.log(res.data)
                 resp= res.data
-                resp.token = "pqthinh"
+                resp.userToken = res.data.id
+                signIn(resp)
                 
             })
             .catch(error =>{
                 if (error.response.status === 401) setError(error.response.data.message)
                 else setError("Có lỗi hệ thống xảy ra")
-                return
+                console.log(error)
             })
             // console.log(data)
             // signIn(resp)
@@ -179,7 +184,7 @@ const SignInScreen = ({navigation}) => {
                 style={styles.footer}
             >
                 <ScrollView>
-                <Text style={styles.text_footer}>{error}</Text>
+                <Text style={[styles.text_footer],{color: "red", textAlign: "center"}}>{error}</Text>
                 <Text style={styles.text_footer}>Username</Text>
                 <View style={styles.action}>
                     <FontAwesome 

@@ -13,7 +13,7 @@ import {
   DarkTheme as PaperDarkTheme 
 } from 'react-native-paper';
 import AsyncStorage from '@react-native-community/async-storage';
-// import { Searchbar } from 'react-native-paper';
+import SyncStorage from 'sync-storage';
 
 import { DrawerContent } from './screens/DrawerContent';
 import MainTabScreen from './stack/MainTabScreen';
@@ -24,20 +24,9 @@ import BookmarkScreen from './screens/BookmarkScreen';
 import { AuthContext } from './components/context';
 import RootStackScreen from './stack/RootStackScreen';
 import loginReducer from './reducers/user'
-// import { ScrollView } from 'react-native-gesture-handler';
-// import LocationComponent from './components/location';
-// import { HeaderBackground } from '@react-navigation/stack';
 
 const Drawer = createDrawerNavigator();
 const DEVICE_WIDTH = Dimensions.get('window').width
-
-// const App = () =>{
-//   return(
-//     <ScrollView>
-//       <LocationComponent />
-//     </ScrollView>
-//   )
-// }
 
 const App = () => {
   // const [isLoading, setIsLoading] = React.useState(true);
@@ -86,19 +75,26 @@ const App = () => {
   // Bắt sựu kiện người dùng đăng nhập vào trang
   const authContext = React.useMemo(() => ({
     signIn: async(foundUser) => {
-      const userToken = String(foundUser[0].userToken);
-      const userName = foundUser[0].username;
+      console.log("found user: "+ JSON.stringify(foundUser))
+      const userToken = String(foundUser.userToken);
+      const userName = foundUser.username;
+      // SyncStorage.set('current', JSON.stringify(foundUser))
       try {
         await AsyncStorage.setItem('userToken', userToken);
+        await AsyncStorage.setItem('currentuser', JSON.stringify(foundUser))
       } catch(e) {
         console.log(e);
       }
-      console.log('user token: ', userToken);
+      userToken0 =  AsyncStorage.getItem('currentuser')
+
+      console.log('user token: ', userToken0);
       dispatch({ type: 'LOGIN', id: userName, token: userToken });
     },
     signOut: async() => {
+      // SyncStorage.remove('current')
       try {
         await AsyncStorage.removeItem('userToken');
+        await AsyncStorage.removeItem('currentuser');
       } catch(e) {
         console.log(e);
       }
@@ -118,7 +114,7 @@ const App = () => {
       let userToken;
       userToken = null;
       try {
-        userToken = await AsyncStorage.getItem('userToken');
+        userToken = await AsyncStorage.getItem('currentuser');
       } catch(e) {
         console.log(e);
       }

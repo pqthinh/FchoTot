@@ -19,8 +19,8 @@ import axios from 'axios'
 import { useTheme } from 'react-native-paper';
 // import {baseUrl} from '../http'
 import { AuthContext } from '../components/context';
-const baseUrl = "https://vast-shore-33582.herokuapp.com"
-// import Users from '../model/users';
+// const baseUrl = "https://vast-shore-33582.herokuapp.com"
+const baseUrl = "http://192.168.101.109:3000"
 
 const SignInScreen = ({navigation}) => {
 
@@ -102,21 +102,25 @@ const SignInScreen = ({navigation}) => {
 
     const guestLogin = () =>{
         const foundUser = {
-            email: "user1@email.com",
+            email: "guset@email.com",
             id: 0,
-            password: "password",
+            password: "guest",
             userToken: "token123",
-            username: "user1",
-            role: "guest"
+            username: "guest",
+            role: "guest",
+            mobile: "011111111111111",
+            avatar: "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
+            followe: 0,
+            following: 0
         }
-        signIn([foundUser]);
+        signIn(foundUser);
     }
 
     const loginHandle = (email, password) => {
         
         setError(null)
         setLoading(true)
-        var user 
+        var user ={}
         if ( data.email.length == 0 || data.password.length == 0 ) {
             Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
                 {text: 'Okay'}
@@ -127,18 +131,20 @@ const SignInScreen = ({navigation}) => {
         axios.post(`${baseUrl}/user/login`, {email, password})
         .then(res=>{
             setLoading(false)
-            // alert(JSON.stringify(res.data))
-            
+            setError(null)
             user = res.data
-            user.token = "pqthinh"
-            console.log(user)
+            user.userToken = "pqthinh"
+            console.log(user + "user")
+            signIn(user);
+            
+            
         })
         .catch(error => {
             setLoading(false)
             if (error.response.status === 401) setError(error.response.data.message)
             else setError("Something went wrong. Please try again later.")
         })
-        signIn(user);
+        
         // if ( foundUser.length == 0 ) {
         //     Alert.alert('Invalid User!', 'Username or password is incorrect.', [
         //         {text: 'Okay'}

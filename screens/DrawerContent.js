@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
     useTheme,
@@ -15,6 +15,8 @@ import {
     DrawerContentScrollView,
     DrawerItem
 } from '@react-navigation/drawer';
+import AsyncStorage from '@react-native-community/async-storage';
+// import SyncStorage from 'sync-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import{ AuthContext } from '../components/context';
@@ -23,7 +25,50 @@ export function DrawerContent(props) {
 
     const paperTheme = useTheme();
     const { signOut, toggleTheme } = React.useContext(AuthContext);
+    const [user, setUser] = useState({})
+    // console.log(SyncStorage.get("current"))
+    const getData = async () => {
+        try {
+            // const jsonValue = await AsyncStorage.getAllKeys()
+            const jsonValue = await AsyncStorage.getItem('currentuser')
+            jsonValue != null ? JSON.parse(jsonValue) : null
+            setUser(JSON.parse(jsonValue))
+            return jsonValue
+        } catch(e) {
+            console.log(e)
+            return null
+        }
+    }
+    // useEffect(()=> {
+    //     const jsonValue = getData()
+    //     setUser(jsonValue)
+    // },[])
+    var temp ={}
+    getData()
+    // .then(res => {
+    //     console.log(res)
+    //     temp = JSON.parse(res)
+    //     console.log("1: "+ temp.name)
+    // })
+    // .catch(err=>{
+    //     temp={}
+    //     console.log(err)
+    // })
 
+    // console.log("temp: "+ temp)
+    let u = user
+    // const u = JSON.parse(user)
+    // console.log("jhaw: "+  user)
+    // setUser(u)
+    // {"id":6,"name":"phan thinh","email":"thinh1@edu.vn","mobile":"0998765327","password":"thinh","status":"pendding","role":"seller","avatar":"https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png","follower":10,"following":5,"create_at":"2020-12-10T15:49:54.000Z","update_at":"2020-12-10T15:49:54.000Z","userToken":"pqthinh"}
+    const data = {
+        name:   u.name ,
+        email:   u.email,
+        phone: u.mobile ,
+        avatar:    u.avatar,
+        follower: u.follower,
+        following: u.following
+    }
     return(
         <View style={{flex:1}}>
             <DrawerContentScrollView {...props}>
@@ -32,23 +77,23 @@ export function DrawerContent(props) {
                         <View style={{flexDirection:'row',marginTop: 15}}>
                             <Avatar.Image 
                                 source={{
-                                    uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
+                                    uri: data.avatar? data.avatar : 'https://api.adorable.io/avatars/50/abott@adorable.png'
                                 }}
                                 size={50}
                             />
                             <View style={{marginLeft:15, flexDirection:'column'}}>
-                                <Title style={styles.title}>John Doe</Title>
-                                <Caption style={styles.caption}>@j_doe</Caption>
+                                <Title style={styles.title}>{data.name}</Title>
+                                <Caption style={styles.caption}>{data.email}</Caption>
                             </View>
                         </View>
 
                         <View style={styles.row}>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
+                            <Paragraph style={[styles.paragraph, styles.caption]}>{data.following}</Paragraph>
                                 <Caption style={styles.caption}>Following</Caption>
                             </View>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
+                                <Paragraph style={[styles.paragraph, styles.caption]}>{data.follower}</Paragraph>
                                 <Caption style={styles.caption}>Followers</Caption>
                             </View>
                         </View>
