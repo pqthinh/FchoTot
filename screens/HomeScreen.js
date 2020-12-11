@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from 'react'
-import { View, Text, Button, StyleSheet, StatusBar } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { useTheme } from '@react-navigation/native'
 import { ScrollView } from 'react-native-gesture-handler'
 import axios from 'axios'
@@ -8,14 +8,14 @@ import Category from '../components/category'
 import Banner from '../components/banner'
 import NewsPost from '../components/NewsPost'
 import ExtendComponent from '../components/extends'
+import baseURL from '../http'
+import image from '../data/banner'
+import EmptyScreen from './emptyScreen'
 
 import {LogBox} from 'react-native'
 LogBox.ignoreAllLogs()
 LogBox.ignoreLogs(['Warning: ...'])
 
-const baseURL = "http://192.168.101.109:3000"
-import image from '../data/banner'
-import EmptyScreen from './emptyScreen'
 
 const HomeScreen = ({navigation}) => {
 
@@ -24,8 +24,6 @@ const HomeScreen = ({navigation}) => {
   const [loading, setLoading] = useState(false)
   const [newsposted, setNewsposted] = useState([])
   useEffect(()=>{
-    // var newsList = require('../data/tindang.json')
-    // setNewsposted(newsList)
     loadPost()
   },[])
 

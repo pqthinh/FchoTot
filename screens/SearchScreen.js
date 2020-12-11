@@ -5,23 +5,46 @@ import RangeSlider from 'react-native-range-slider-expo';
 import RNPickerSelect from 'react-native-picker-select';
 import { TextInput } from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
+import {Picker} from '@react-native-picker/picker';
+import axios from 'axios'
+import baseURL from '../http'
+import EmptyScreen from './emptyScreen'
+import NewsPost from '../components/NewsPost';
 
 var currencyFormatter = require('currency-formatter')
 
-import ListNewsComponent from '../components/NewsPost';
-
 const SearchScreen = ({navigation, route}) => {
+    // route dc truyen cac tham so nhu ten sản pham / ten danh muc
+    const ctg = route.params.category? route.params.category : ""
+    const tensp = route.params.dataQuery? route.params.dataQuery : ""
     const [newsposted, setNewsposted] = useState([])
     const [fromValue, setFromValue] = useState(1000);
     const [toValue, setToValue] = useState(10000000000);
     const [sort, setSort] = useState(null)
     const [type, setType] = useState(null)
     const [place, setPlace] = useState(null)
-    
+    const [danhmuc, setDanhmuc] = useState(ctg)
+    const [loading, setLoading] = useState(false)
+    // fetch form search
     useEffect(()=>{
-      var newsList = require('../data/tindang.json')
-      setNewsposted(newsList)
+      loadPost()
     },[])
+  
+    const loadPost = async () =>{
+      setLoading(true)
+      const news = await axios.get(`${baseURL}/search?type=${danhmuc}&tensp=${tensp}`)
+      console.log("So luong tin loc danh muc / tim theo ten : " + news.data.length)
+      await setNewsposted(news.data)
+      setLoading(false)
+    }
+
+    const handleFilter = async () =>{
+      setLoading(true)
+      const news = await axios.get(`${baseURL}/search?type=${danhmuc}&tensp=${tensp}&min_price=${fromValue}&max_price=${toValue}&address=${place}&sort=${sort}&loaitin=${type}`)
+      console.log("So luong tin loc ra: " + news.data.length)
+      await setNewsposted(news.data)
+      setLoading(false)
+    }
 
     return (
       <View style={styles.container}>
@@ -32,7 +55,7 @@ const SearchScreen = ({navigation, route}) => {
             {/* Get info then call api filter */}
             <TouchableOpacity 
               onPress={()=> {
-                
+                handleFilter()
               }} 
               
               style={{backgroundColor: "#049372", padding: 4, borderRadius: 4}}>
@@ -44,6 +67,28 @@ const SearchScreen = ({navigation, route}) => {
           </View>
           <ScrollView >
               <View >
+                        <Picker
+                            selectedValue= {danhmuc}
+                            onValueChange={(itemValue, itemIndex) => setDanhmuc(itemValue)}
+                            style={{ height: 40, width: '60%', fontSize: 12}}
+                        > 
+                            <Picker.Item label="Tất cả" value={null} />
+                            <Picker.Item label="Bất động sản" value="Bất động sản" />
+                            <Picker.Item label="Xe cộ" value="Xe cộ" />
+                            <Picker.Item label="Đồ điện tử" value="Đồ điện tử" />
+                            <Picker.Item label="Đồ ăn, thực phẩm" value="Đồ ăn, thực phẩm" />
+                            <Picker.Item label="Giải trí, thể thao" value="Giải trí, thể thao" />
+                            <Picker.Item label="Mẹ và bé" value="Mẹ và bé" />
+                            <Picker.Item label="Du lịch, Dịch vụ" value="Du lịch, Dịch vụ" />
+                            <Picker.Item label="Cho tặng miễn phí" value="Cho tặng miễn phí" />
+                            <Picker.Item label="Thú cưng" value="Thú cưng" />
+                            <Picker.Item label="Đồ gia dụng, nội thất" value="Đồ gia dụng, nội thất" />
+                            <Picker.Item label="Tủ lạnh, máy giặt" value="Tủ lạnh, máy giặt" />
+                            <Picker.Item label="Thời trang" value="Thời trang" />
+                            <Picker.Item label="Đồ dùng văn phòng" value="Đồ dùng văn phòng" />
+                            <Picker.Item label="Tất cả danh mục" value="Tất cả danh mục" />
+                            <Picker.Item label="Việc làm" value="Việc làm" />
+                        </Picker>
                 <RNPickerSelect
                     onValueChange={(value) => setSort(value)}
                     items={[
@@ -68,7 +113,7 @@ const SearchScreen = ({navigation, route}) => {
                       value: type
                     }}
                     style={styles.inputAndroidRNPicker}
-                    // value={type}
+                    value={type}
                 />
                 <TextInput 
                     value={place}
@@ -93,8 +138,12 @@ const SearchScreen = ({navigation, route}) => {
         </View>
         {/* Goi api query search tin */}
         <View style={styles.result}>
+          <Text></Text>
           <ScrollView>
-            <ListNewsComponent newspost={newsposted}  navigation={navigation} danhmuc={"Kết quả tìm kiếm"}/>
+          {loading? 
+            <EmptyScreen /> :
+            <NewsPost navigation={navigation} newspost={newsposted} danhmuc={"Kết quả tìm kiếm"}/>
+          }
           </ScrollView>
         </View>
       </View>

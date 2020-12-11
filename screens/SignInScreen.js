@@ -17,10 +17,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios'
 import { useTheme } from 'react-native-paper';
-// import {baseUrl} from '../http'
+import baseUrl from '../http'
 import { AuthContext } from '../components/context';
-// const baseUrl = "https://vast-shore-33582.herokuapp.com"
-const baseUrl = "http://192.168.101.109:3000"
 
 const SignInScreen = ({navigation}) => {
 

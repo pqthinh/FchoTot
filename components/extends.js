@@ -22,35 +22,35 @@ const ExtendComponent = ({navigation}) => {
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-            >
-                <TouchableOpacity onPress={()=> navigation.navigate('Bookmarks')}>
+            >   
+                <TouchableOpacity onPress={()=> navigation.navigate('NewsSave', {header: "Tin đăng đã lưu"})}>
+                    <View style={styles.box}> 
+                        <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={image[4].title} />
+                        <Text style={styles.text}>{image[4].content}</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=> navigation.navigate('NewsSave', {header: "Tìm kiếm đã lưu"})}>
                     <View style={styles.box}> 
                         <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={image[0].title} />
                         <Text style={styles.text}>{image[0].content}</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=> navigation.navigate('Details')}>
+                <TouchableOpacity onPress={()=> navigation.navigate('Bookmarks')}>
                     <View style={styles.box}> 
                         <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={image[1].title} />
                         <Text style={styles.text}>{image[1].content}</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=> navigation.navigate('Details')}>
+                <TouchableOpacity onPress={()=> navigation.navigate('Bookmarks')}>
                     <View style={styles.box}> 
                         <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={image[2].title} />
                         <Text style={styles.text}>{image[2].content}</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=> navigation.navigate('Details')}>
+                <TouchableOpacity onPress={()=> navigation.navigate('Bookmarks')}>
                     <View style={styles.box}> 
                         <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={image[3].title} />
                         <Text style={styles.text}>{image[3].content}</Text>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={()=> navigation.navigate('Details')}>
-                    <View style={styles.box}> 
-                        <Image style={{ width: Height, height: Height, alignItems: 'center', justifyContent: 'center'}} source={image[4].title} />
-                        <Text style={styles.text}>{image[4].content}</Text>
                     </View>
                 </TouchableOpacity>
             </ScrollView>

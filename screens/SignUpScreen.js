@@ -20,9 +20,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Switch } from 'react-native-paper';
 import Axios from 'axios';
 import { AuthContext } from '../components/context';
-// import {baseUrl} from '../http'
-// const baseUrl = "https://vast-shore-33582.herokuapp.com"
-const baseUrl = "http://192.168.101.109:3000"
+import baseUrl from '../http'
 
 const SignInScreen = ({navigation}) => {
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);

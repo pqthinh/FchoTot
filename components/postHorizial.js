@@ -1,30 +1,36 @@
 import React ,{ useEffect, useState }from 'react'
-import {View, Text, Image, Platform, StyleSheet} from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {View, Text, Image, Platform, StyleSheet, ImageBackground} from 'react-native'
 import TimeAgo from 'react-native-timeago';
+
 var currencyFormatter = require('currency-formatter')
 
-const heightImage =  Platform.OS == 'android'? 150: Platform.OS == 'ios'? 120: 180
+const heightImage =  120
 
-export default function ListNewsComponent({navigation, news}) {
-   
+export default function ListNewsComponentRow({news}) {
     return (
-        <TouchableOpacity key={index} onPress={()=> navigation.navigate("Details", {params: {id: news.id_tindang, name: news.ten}})} >
-            <View style={{borderWidth: 0.25, borderColor: '#e0e0e0', marginRight: 5, marginTop: 5}}>
+        <View style={styles.containerNewsPost}>
+            <View>
                 <Image
                     style={styles.image}
                     source={{uri: news.anh}}
                     title={news.ten} 
                 />
-                <View style={{margin: 5}}>
-                    <Text style={styles.titleOfImage}>{news.ten.length> 15 ? Platform.OS == 'web' ? news.ten.slice(0,18) : news.ten.slice(0,15) : news.ten}</Text>
-                    <Text style={{fontSize: 12, color: 'red'}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
-                    <Text style={{fontSize: 12}}>{news.idnguoiban == 1 ? "Pham quang thinh" : "admin" }</Text>
-                    <Text style={{fontSize: 12}}>{news.diadiem}</Text>
-                    <Text style={{fontSize: 12}}><TimeAgo time={news.ngayban} /></Text>
+                <View style={styles.count}>
+                    <ImageBackground source={require('../assets/camera-clipart-7.jpg')} style={{width: 30, height: 30}}>
+                        <Text style={{marginLeft: 2, color: "#C8F7C5", marginTop: 5, fontSize: 14}}>{news.anh.trim().split(",").length}</Text>
+                    </ImageBackground>
                 </View>
+                
             </View>
-        </TouchableOpacity>
+            
+            <View style={{margin: 5}}>
+                <Text style={styles.titlePost}>{news.ten.length> 15 ? Platform.OS == 'web' ? news.ten.slice(0,18) : news.ten.slice(0,15) : news.ten}</Text>
+                <Text style={{fontSize: 20, color: 'red'}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
+                <Text style={{fontSize: 12, marginTop: 20}}>{news.name }</Text>
+                <Text style={{fontSize: 12}}>{news.diadiem}</Text>
+                <Text style={{fontSize: 12}}><TimeAgo time={news.ngayban} /></Text>
+            </View>
+        </View>
     )
 }
 
@@ -36,10 +42,17 @@ const styles = StyleSheet.create({
         padding: 5,
         margin: 5
     },
-    titleOfImage: {
+    count: {
+        position: "absolute",
+        right: 5,
+        top:2,
+        width: 30,
+        height: 30,
+    },
+    titlePost: {
         fontWeight: "400",
         color: '#000',
-        fontSize:Platform.OS == 'web'? wp('1.5%') : 16
+        fontSize: 16
     },
     viewNewsPosted:{
         alignContent: 'center',
@@ -55,8 +68,10 @@ const styles = StyleSheet.create({
         fontWeight: "600"
     },
     containerNewsPost: {
-        backgroundColor: '#fff',
-        marginTop: 10,
-        width: Platform.OS=='web'? 1000 : '100%'
+        borderWidth: 0.25, 
+        borderColor: '#e0e0e0', 
+        marginRight: 5, 
+        marginTop: 5,
+        flexDirection: 'row'
     }
 })

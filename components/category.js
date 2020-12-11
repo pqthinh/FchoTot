@@ -20,7 +20,7 @@ export default function Category({navigation}) {
                     <View style={styles.viewCategory}>
                         {categorys.map( (x, index) => (
                             <TouchableOpacity 
-                                onPress={() => navigation.navigate('Search',{params: {id : x.id, name: x.name}})}
+                                onPress={() => navigation.navigate('Search',{category: x.name})}
                                 key={index}
                             >
                                 <View style={styles.category}>

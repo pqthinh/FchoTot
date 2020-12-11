@@ -6,28 +6,29 @@ import { Entypo } from '@expo/vector-icons';
 import ImageSlider from 'react-native-image-slider';
 import { Divider  , Avatar, Card } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-// import Banner from '../components/banner'
-
-import image from '../data/banner'
+import TimeAgo from 'react-native-timeago';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+var currencyFormatter = require('currency-formatter')
 
 const DetailsScreen = ({navigation, route}) => {
 
-  // Tham so truyen vao route 
-  // Sua lai trang thai tu tham so truyen vao
-  
-  // if(route?.params.news) {
-  //   console.log(JSON.stringify(route.params.news.params.news))
-  // }
+  // alert(JSON.stringify(route.params))
+  // oke
+  const news=  route.params.news
 
   const [images, setImages] = useState([])
-
+  const handleImage = (anh) =>{
+    var imgs = anh.trim().split(",")
+    console.log(imgs.length)
+    if(imgs.length==0 || anh.length==0) return ["https://image.shutterstock.com/image-vector/merchandise-line-icons-signs-set-600w-1371727865.jpg"]
+    return imgs
+  }
+  // news.describle = `Miêu tả chi tiết sản phầm`
+  
   useEffect(() => {
-    setImages(image.imageproduct)
-  })
+    setImages(handleImage(news.anh))
+  },[])
 
-  // console.log(images)
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -53,11 +54,11 @@ const DetailsScreen = ({navigation, route}) => {
                 />
             </View>
             <View style={{marginVertical: 10}}>
-              <Text style={styles.namePost}>Bầy chó pug con thuần chủng</Text>
+              <Text style={styles.namePost}>{news.ten}</Text>
               <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center'}}>
                     <View> 
-                      <Text style={styles.giaBan}> 2.500.000 đ </Text>
-                      <Text> 1 days ago</Text>
+                    <Text style={{fontSize: 16, color: 'red'}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
+                      <Text><TimeAgo time={news.ngaycapnhat} /> </Text>
                     </View>
                     <TouchableOpacity onPress={()=> alert("Them vao tin yeu thich")} style={{borderColor: "red", borderRadius: 10, borderWidth: 1, padding: 5, width: 100, flexDirection: 'row',  paddingHorizontal: 10, justifyContent: 'space-between'}}>
                       <Text style={{color:'red'}}>Lưu tin</Text>
@@ -69,9 +70,9 @@ const DetailsScreen = ({navigation, route}) => {
 
             <View style={{marginVertical: 10}}>
               <Card.Title
-                title="Pham Quang Thinh"
+                title={news.name}
                 subtitle="4,5 sao"
-                left={(props) => <Avatar.Image size={50} source={{ uri: "https://cdn.chotot.com/6pJ5-4igzkfRxAJTAGbhCxL_pbG0NP0I0WnUYhy89zI/preset:uac/plain/df4c09946eb6f1bd68cd13758e002c42-2693478985843707407.jpg"}} />}
+                left={(props) => <Avatar.Image size={50} source={{ uri: news.avatar}} />}
                 right={(props) => 
                   <TouchableOpacity onPress={()=> alert("Xem trang ca nhan")} style={{borderColor: "#fe9900", borderRadius: 10, borderWidth: 1, padding: 5, width: 80, flexDirection: 'row',  paddingHorizontal: 2, justifyContent: 'center', marginRight: 10}}>
                     <Text style={{color:'#fe9900'}}>Xem trang</Text>
@@ -81,24 +82,21 @@ const DetailsScreen = ({navigation, route}) => {
             <Divider />
             <View style={{marginVertical: 10}}>
               <Text>
-                Chó nhà tới ngày rã bầy rồi {"\n"}
-                Chó con nuôi dân dã khỏi lo kén ăn nha a chị, đã chích ngừa và sổ lãi định kì. {"\n"}
-                Mọi người nhanh tay tới lựa đón các bé nha {"\n"}
-                Giá từ 2tr5 -3tr5 1 bé... càng nhiệt tình tới nhà xem bớt càng nhiều nha {"\n"}
+               {news.describle? `${news.describle}` :  <Text style={{color: "red", alignContent: 'center', justifyContent: "center"}}>Chưa có thông tin miêu tả</Text>}
               </Text>
             </View>
-            <Text>{JSON.stringify(route.params)}</Text>
+
           </ScrollView>
         </View>
         <View style={{flexDirection:"row" , justifyContent: 'space-between', height: 40}}>
             <TouchableOpacity style={{flexDirection: "row", backgroundColor: '#16a085',   paddingHorizontal: 10, alignItems: 'center', paddingVertical: 10}} 
-              onPress={()=> Linking.openURL("tel: 0866564502")}>
+              onPress={()=> Linking.openURL(`tel: ${news.mobile}`)}>
               <Ionicons name="ios-call" style={{paddingRight: 10}} size={24} color="#fff" />
               <Text style={{color: '#fff'}}>Gọi điện</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={{flexDirection: "row", color: '#3c763d', paddingHorizontal: 10, alignItems: 'center', paddingVertical: 10}} 
-              onPress={()=> Linking.openURL("sms: 0866564502")}>
+              onPress={()=> Linking.openURL(`sms: ${news.mobile}`)}>
               <FontAwesome5 name="sms" size={24} color="3c763d" style={{paddingRight: 10}}/>
               <Text style={{color: 'black'}}>Nhắn tin</Text>
             </TouchableOpacity>
@@ -106,7 +104,7 @@ const DetailsScreen = ({navigation, route}) => {
             <TouchableOpacity style={{flexDirection: "row", backgroundColor: '#16a085', paddingHorizontal: 10, alignItems: 'center', paddingVertical: 10}} 
               onPress={()=> {
                 alert("Chat online")
-                navigation.navigate('ChatDetails', {title: "Pham Quang Thinh", phone: "0866564502"})
+                navigation.navigate('ChatDetails', {title: `${news.name}`, phone: `${news.mobile}`, id: news.id})
               }}
             >
               <AntDesign name="wechat" style={{paddingRight: 10}} size={24} color="#fff" />

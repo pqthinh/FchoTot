@@ -213,5 +213,3 @@ const styles= StyleSheet.create({
     paddingLeft: 10
   }
 })
-
-{/* <Text style={{backgroundColor: '#fff', padding: 5}} onPress={()=> navigation.navigate('Search')}>Hello world</Text> */}

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {ScrollView, View, Text, StyleSheet, TouchableOpacity , Image, PushNotificationIOS} from 'react-native'
+import {ScrollView, View, Text, StyleSheet, TouchableOpacity , Image } from 'react-native'
 import {Picker} from '@react-native-picker/picker';
 import { TextInput } from 'react-native-paper';
 
@@ -89,21 +89,21 @@ const PostNewsScreen = ({navigation, route }) =>{
                             onValueChange={(itemValue, itemIndex) => setDanhmuc(itemValue)}
                             style={{ height: 40, width: '60%', fontSize: 12}}
                         >
-                            <Picker.Item label="Bất động sản" value="1" />
-                            <Picker.Item label="Xe cộ" value="2" />
-                            <Picker.Item label="Đồ điện tử" value="3" />
-                            <Picker.Item label="Đồ ăn, thực phẩm" value="4" />
-                            <Picker.Item label="Giải trí, thể thao" value="5" />
-                            <Picker.Item label="Mẹ và bé" value="6" />
-                            <Picker.Item label="Du lịch, Dịch vụ" value="7" />
-                            <Picker.Item label="Cho tặng miễn phí" value="8" />
-                            <Picker.Item label="Thú cưng" value="9" />
-                            <Picker.Item label="Đồ gia dụng, nội thất" value="10" />
-                            <Picker.Item label="Tủ lạnh, máy giặt" value="11" />
-                            <Picker.Item label="Thời trang" value="12" />
-                            <Picker.Item label="Đồ dùng văn phòng" value="13" />
-                            <Picker.Item label="Tất cả danh mục" value="14" />
-                            <Picker.Item label="Việc làm" value="15" />
+                            <Picker.Item label="Bất động sản" value="Bất động sản" />
+                            <Picker.Item label="Xe cộ" value="Xe cộ" />
+                            <Picker.Item label="Đồ điện tử" value="Đồ điện tử" />
+                            <Picker.Item label="Đồ ăn, thực phẩm" value="Đồ ăn, thực phẩm" />
+                            <Picker.Item label="Giải trí, thể thao" value="Giải trí, thể thao" />
+                            <Picker.Item label="Mẹ và bé" value="Mẹ và bé" />
+                            <Picker.Item label="Du lịch, Dịch vụ" value="Du lịch, Dịch vụ" />
+                            <Picker.Item label="Cho tặng miễn phí" value="Cho tặng miễn phí" />
+                            <Picker.Item label="Thú cưng" value="Thú cưng" />
+                            <Picker.Item label="Đồ gia dụng, nội thất" value="Đồ gia dụng, nội thất" />
+                            <Picker.Item label="Tủ lạnh, máy giặt" value="Tủ lạnh, máy giặt" />
+                            <Picker.Item label="Thời trang" value="Thời trang" />
+                            <Picker.Item label="Đồ dùng văn phòng" value="Đồ dùng văn phòng" />
+                            <Picker.Item label="Tất cả danh mục" value="Tất cả danh mục" />
+                            <Picker.Item label="Việc làm" value="Việc làm" />
                         </Picker>
                     </TouchableOpacity>
 
