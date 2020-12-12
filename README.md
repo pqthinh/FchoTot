@@ -13,7 +13,7 @@ server: https://chotot-server.herokuapp.com
 mysql : remotemysql
 
 ### App Fchotot
-https://exp.host/@pqthinh_/testapp/index.exp?sdkVersion=39.0.0
+https://exp.host/@pqthinh_/testapp/
 ### công nghệ sử dụng
 
 React native chạy trên expo
@@ -42,6 +42,15 @@ mysql
 
 
 ### Hướng dẫn chạy trên máy cá nhân
+
+Sửa file baseUrl trong file src/http.js (sửa thành địa chỉ host local + port trong mạng LAN )
+clone server + mysql 
+sửa baseUrl trong file app/models/model.image.js (sửa thành địa chỉ host local + port trong mạng LAN ) 
+mặc định là: "http://192.168.101.109:3000"
+
+run repo server chotot 
+chạy app Fchotot : https://expo.io/@pqthinh_/projects/testapp  ? 
+
 
 ___final__
 
