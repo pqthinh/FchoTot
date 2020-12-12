@@ -13,6 +13,7 @@ import StackScreenChat from './StackScreenChat'
 import {LogBox} from 'react-native'
 import ChatDetailsScreen from '../screens/ChatScreen';
 import SaveNewsScreen from '../screens/SaveNewsScreen';
+import SellerPostScreen from '../screens/SellerPost';
 
 LogBox.ignoreAllLogs()
 LogBox.ignoreLogs(['Warning: ...']);
@@ -39,6 +40,8 @@ const HomeStackScreen = ({navigation}) => (
         <HomeStack.Screen name="ChatDetails" component={ChatDetailsScreen} />
         {/* Chuyen sang trang xem tin dang da luu */}
         <HomeStack.Screen name="NewsSave" component={SaveNewsScreen} />
+        {/* Trang tôi bán sang trang chi tiết sp */}
+        <HomeStack.Screen name="Seller" component={SellerPostScreen} />
     </HomeStack.Navigator>
 );
 

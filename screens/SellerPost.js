@@ -1,37 +1,287 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React , {useState , useEffect} from 'react';
+import { View, Text, StyleSheet , ScrollView , TouchableOpacity} from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios'
+import baseURL from '../http'
+import EmptyScreen from './emptyScreen';
+import ListNewsComponentRow from '../components/postHorizial'
 
 const Tab = createMaterialTopTabNavigator();
 
-const TatCaTin = () =>{
+const TatCaTin = ({navigation}) =>{
+  const [newsposted, setNewsposted] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  // fetch data tin da lưu
+  useEffect(()=>{
+      if(!newsposted) setNewsposted([])
+
+      if(!currentUser || typeof currentUser.id === "undefined" || currentUser.id === "undefined") {
+          loadUser()
+      }
+      if( typeof newsposted.length === "undefined" || !newsposted.length ) {
+          loadPost()
+      }
+      // loadPost()
+  },[currentUser])
+
+  const loadUser = async () =>{
+      try {
+          setLoading(true)
+          const jsonValue = await AsyncStorage.getItem('currentuser')
+          var temp = jsonValue != null ? JSON.parse(jsonValue) : null;
+          setCurrentUser(temp)
+          setLoading(false)
+      } catch(e) {
+          console.log(e)
+          setLoading(true)
+      }
+      
+  }
+  
+  const loadPost = async() =>{
+      setLoading(true)
+      
+      if(!currentUser)  loadUser()
+
+      if(currentUser && typeof currentUser !== "undefined" && typeof currentUser.id !== "undefined") {
+          console.log("current user id: " + currentUser.id)
+          const news = await axios.get(`${baseURL}/search?owner=${currentUser?currentUser.id: 5}`)
+          setNewsposted(news.data)
+          console.log("Số lượng tin: " + news.data.length)
+      }
+      setLoading(false)
+    }
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Chưa cập nhật</Text>
+      <Text style={{fontSize: 16, fontWeight: "bold", margin: 10}}>Tất cả các tin đã đăng</Text>
+      {
+        loading? 
+          <EmptyScreen/>
+        :
+        
+        <ScrollView>
+          <View style={{marginHorizontal: 10}}> 
+              {   
+                  (newsposted === "undefined" || newsposted.length == 0 || typeof newsposted.length === "undefined") ? <Text>Danh mục trống</Text>  :
+                  newsposted?.map(x => (
+                      <TouchableOpacity key={x.id} onPress={()=> navigation.navigate("Details", {news:x})} >
+                          <ListNewsComponentRow news={x} />
+                      </TouchableOpacity>
+                  ))
+              }
+          </View>
+        </ScrollView>
+      }
     </View>
+    
   )
 }
-const TinChoDuyet = () =>{ 
+const TinChoDuyet = ({navigation}) =>{ 
+  const [newsposted, setNewsposted] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  // fetch data tin da lưu
+  useEffect(()=>{
+      if(!newsposted) setNewsposted([])
+
+      if(!currentUser || typeof currentUser.id === "undefined" || currentUser.id === "undefined") {
+          loadUser()
+      }
+      if( typeof newsposted.length === "undefined" || !newsposted.length ) {
+          loadPost()
+      }
+      // loadPost()
+  },[currentUser])
+
+  const loadUser = async () =>{
+      try {
+          setLoading(true)
+          const jsonValue = await AsyncStorage.getItem('currentuser')
+          var temp = jsonValue != null ? JSON.parse(jsonValue) : null;
+          setCurrentUser(temp)
+          setLoading(false)
+      } catch(e) {
+          console.log(e)
+          setLoading(true)
+      }
+      
+  }
+  
+  const loadPost = async() =>{
+      setLoading(true)
+      
+      if(!currentUser)  loadUser()
+
+      if(currentUser && typeof currentUser !== "undefined" && typeof currentUser.id !== "undefined") {
+          const news = await axios.get(`${baseURL}/search?owner=${currentUser?currentUser.id: 5}&state=1`)
+          setNewsposted(news.data)
+          console.log("Đang chờ duyệt: " + news.data.length)
+      }
+      setLoading(false)
+    }
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Chưa có api</Text>
+      <Text style={{fontSize: 16, fontWeight: "bold", margin: 10}}>Tất cả các tin đã đăng</Text>
+      {
+        loading? 
+          <EmptyScreen/>
+        :
+        
+        <ScrollView>
+          <View style={{marginHorizontal: 10}}> 
+              {   
+                  (newsposted === "undefined" || newsposted.length == 0 || typeof newsposted.length === "undefined") ? <Text>Danh mục trống</Text>  :
+                  newsposted?.map(x => (
+                      <TouchableOpacity key={x.id} onPress={()=> navigation.navigate("Details", {news:x})} >
+                          <ListNewsComponentRow news={x} />
+                      </TouchableOpacity>
+                  ))
+              }
+          </View>
+        </ScrollView>
+      }
     </View>
+    
   )
 }
-const TinDangBan = () =>{ 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Chưa có api</Text>
-      </View>
-    )
+const TinDangBan = ({navigation}) =>{ 
+  const [newsposted, setNewsposted] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  // fetch data tin da lưu
+  useEffect(()=>{
+      if(!newsposted) setNewsposted([])
+
+      if(!currentUser || typeof currentUser.id === "undefined" || currentUser.id === "undefined") {
+          loadUser()
+      }
+      if( typeof newsposted.length === "undefined" || !newsposted.length ) {
+          loadPost()
+      }
+      // loadPost()
+  },[currentUser])
+
+  const loadUser = async () =>{
+      try {
+          setLoading(true)
+          const jsonValue = await AsyncStorage.getItem('currentuser')
+          var temp = jsonValue != null ? JSON.parse(jsonValue) : null;
+          setCurrentUser(temp)
+          setLoading(false)
+      } catch(e) {
+          console.log(e)
+          setLoading(true)
+      }
+      
+  }
+  
+  const loadPost = async() =>{
+      setLoading(true)
+      
+      if(!currentUser)  loadUser()
+
+      if(currentUser && typeof currentUser !== "undefined" && typeof currentUser.id !== "undefined") {  
+          const news = await axios.get(`${baseURL}/search?owner=${currentUser?currentUser.id: 5}&state=2`)
+          setNewsposted(news.data)
+          console.log("Tin đang bán: " + news.data.length)
+      }
+      setLoading(false)
+    }
+  return (
+    <View style={styles.container}>
+      <Text style={{fontSize: 16, fontWeight: "bold", margin: 10}}>Tất cả các tin đã đăng</Text>
+      {
+        loading? 
+          <EmptyScreen/>
+        :
+        
+        <ScrollView>
+          <View style={{marginHorizontal: 10}}> 
+              {   
+                  (newsposted === "undefined" || newsposted.length == 0 || typeof newsposted.length === "undefined") ? <Text>Danh mục trống</Text>  :
+                  newsposted?.map(x => (
+                      <TouchableOpacity key={x.id} onPress={()=> navigation.navigate("Details", {news: x})} >
+                          <ListNewsComponentRow news={x} />
+                      </TouchableOpacity>
+                  ))
+              }
+          </View>
+        </ScrollView>
+      }
+    </View>
+    
+  )
 }
-const TinDaBan = () =>{ 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>Chưa có api</Text>
-      </View>
-    )
+const TinDaBan = ({navigation}) =>{ 
+  const [newsposted, setNewsposted] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  // fetch data tin da lưu
+  useEffect(()=>{
+      if(!newsposted) setNewsposted([])
+
+      if(!currentUser || typeof currentUser.id === "undefined" || currentUser.id === "undefined") {
+          loadUser()
+      }
+      if( typeof newsposted.length === "undefined" || !newsposted.length ) {
+          loadPost()
+      }
+      // loadPost()
+  },[currentUser])
+
+  const loadUser = async () =>{
+      try {
+          setLoading(true)
+          const jsonValue = await AsyncStorage.getItem('currentuser')
+          var temp = jsonValue != null ? JSON.parse(jsonValue) : null;
+          setCurrentUser(temp)
+          setLoading(false)
+      } catch(e) {
+          console.log(e)
+          setLoading(true)
+      }
+      
+  }
+  
+  const loadPost = async() =>{
+      setLoading(true)
+      
+      if(!currentUser)  loadUser()
+
+      if(currentUser && typeof currentUser !== "undefined" && typeof currentUser.id !== "undefined") {
+          const news = await axios.get(`${baseURL}/search?owner=${currentUser?currentUser.id: 5}&state=3`)
+          setNewsposted(news.data)
+          console.log("Đang đã bán: " + news.data.length)
+      }
+      setLoading(false)
+    }
+  return (
+    <View style={styles.container}>
+      <Text style={{fontSize: 16, fontWeight: "bold", margin: 10}}>Tất cả các tin đã đăng</Text>
+      {
+        loading? 
+          <EmptyScreen/>
+        :
+        
+        <ScrollView>
+          <View style={{marginHorizontal: 10}}> 
+              {   
+                  (newsposted === "undefined" || newsposted.length == 0 || typeof newsposted.length === "undefined") ? <Text>Danh mục trống</Text>  :
+                  newsposted?.map(x => (
+                      <TouchableOpacity key={x.id} onPress={()=> navigation.navigate("Details", {news: x})} >
+                          <ListNewsComponentRow news={x} />
+                      </TouchableOpacity>
+                  ))
+              }
+          </View>
+        </ScrollView>
+      }
+    </View>
+    
+  )
 }
 
 const SellerPostScreen = ({navigation, route}) => {
@@ -45,13 +295,13 @@ const SellerPostScreen = ({navigation, route}) => {
     );
 };
 
+
+
 export default SellerPostScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   text: {
     fontSize: 14,
@@ -59,48 +309,3 @@ const styles = StyleSheet.create({
     color: 'red'
   },
 });
-
-// import React from 'react'
-// import {ScrollView, View, Text, StyleSheet, Image} from 'react-native'
-// import { AntDesign } from '@expo/vector-icons';
-
-// const SellerPostScreen = ({navigation, props}) =>{
-//     return (
-//         <ScrollView>
-//             {/* Trang tôi bán / quản lý tin đã đang bán bao gồm cả đã duyệt và đang duyệt */}
-//             <AntDesign name="back" size={24} color="black" onPress={()=> navigation.goBack()} style={styles.iconExit}/>
-//             <View style={styles.container}>
-//                 <View style={styles.container}>
-//                     <Image
-//                         style={{width: '100%', height: 200}}
-//                         source={{uri: 'https://i.pinimg.com/236x/39/93/57/399357dd099ace63be681fce3ca08730.jpg'}}
-//                     />
-//                     <Text style={{color: 'red', fontSize: 20, }}>Pham Quang Thinh</Text>
-//                 </View>
-
-//             </View>
-//             <View style={styles.box}>
-//                 <Text> Màn hình trang Tôi bán</Text>
-
-//             </View>
-//         </ScrollView>
-
-//     )
-// }
-
-// export default SellerPostScreen
-
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         marginTop: 20
-//     },
-//     box: {
-//         height: 100
-//     },
-//     iconExit: {
-//         position: 'absolute',
-//         left: 2,
-//         top: 2
-//     }
-// })

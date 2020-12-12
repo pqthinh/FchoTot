@@ -2,13 +2,16 @@ import React, {useState, useEffect} from 'react'
 import {ScrollView, View, Text, StyleSheet, TouchableOpacity , Image } from 'react-native'
 import {Picker} from '@react-native-picker/picker';
 import { TextInput } from 'react-native-paper';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import { Feather, Octicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import axios from 'axios'
+import baseURL from '../http'
 
 import {LogBox} from 'react-native'
 LogBox.ignoreAllLogs()
 LogBox.ignoreLogs(['Warning: ...'])
+// var fs = require('fs');
 
 const PostNewsScreen = ({navigation, route }) =>{
     //  Thông tin cần post leen server //
@@ -29,6 +32,19 @@ const PostNewsScreen = ({navigation, route }) =>{
     // picker images
     const [images, setImages] = useState([])
 
+    // link anh luu tren server : array
+    const [link, setLink] = useState([])
+    const [currentUser, setCurrentUser] = useState({})
+    useEffect(()=> {
+        AsyncStorage.getItem('currentuser', (errs, res)=>{
+            if (!errs) {
+                if (res !== null) {
+                    setCurrentUser(JSON.parse(res))
+                }
+            }
+        })
+    },[])
+    
     const getImage = () =>{
         if(!route.params) return []
         const {data} = route.params
@@ -40,13 +56,14 @@ const PostNewsScreen = ({navigation, route }) =>{
     },[route.params])
     // Lấy ảnh thành công // 
     const news = {
-        loai: theloai,
-        danhmuc: danhmuc,
-        diadiem: xa+ " "+ huyen + " "+ tinh,
+        idnguoiban: currentUser? currentUser.id : 5,
+        loaitin: theloai,
+        tendanhmuc: danhmuc,
+        diadiem: xa+ ", "+ huyen + ", "+ tinh,
         giaban: giaban,
-        tieude: tieude,
+        ten: tieude,
         mieuta: mieuta,
-        anh: images
+        anh: link
     }
     const checkValidation = () =>{
         if(!theloai || !danhmuc || !xa || !huyen|| !tinh || !giaban || !tieude || !mieuta || !anh) {
@@ -55,8 +72,47 @@ const PostNewsScreen = ({navigation, route }) =>{
         }
         return true
     }
-    const uploadTin = ()=>{
-        
+    const uploadImage = ()=> {
+        // add anh vao form data
+        var formData = new FormData()
+        images.forEach(file => {
+            formData.append('file', {
+                uri: file.uri, 					// this is the path to your file. see Expo ImagePicker or React Native ImagePicker
+                type: "image/jpg",  // example: image/jpg
+                name: file.filename   // example: upload.jpg
+            });
+        })
+        axios.post(`${baseURL}/image`,formData , {headers: { "Content-type": "multipart/form-data" }})
+        .then(res=>{
+            console.log("res :" + res.data.path)
+            setLink(res.data.path)
+
+        })
+        .catch(e=>{
+            console.log(e)
+        })
+    }
+
+    // convert array link image to string
+    const linktext = () =>{
+        var text =""
+        link.map(x=> text+= x+",")
+        return text
+    }
+
+    const uploadTin = async ()=>{
+        if(images.length == 0) {
+            alert("Phải chọn ít nhất một ảnh")
+            return
+        }
+        await uploadImage()
+        console.log(link)
+        // const textimage = linktext()
+        // console.log(textimage)
+        news.anh = linktext()
+        console.log(news)
+        const res = await axios.post(`${baseURL}/tindang`, news)
+        console.log(res.data)
     }
     return (
         <View style={styles.container}>

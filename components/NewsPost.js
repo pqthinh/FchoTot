@@ -33,7 +33,7 @@ export default function ListNewsComponent({navigation, newspost, danhmuc}) {
                                 <Text style={styles.titleOfImage}>{news.ten.length> 15 ? Platform.OS == 'web' ? news.ten.slice(0,18) : news.ten.slice(0,15) : news.ten}</Text>
                                 <Text style={{fontSize: 16, color: 'red'}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
                                 <Text style={{fontSize: 12, marginVertical: 2}}><EvilIcons name="user" size={16}  color="black" /> {"  " + news.name}</Text>
-                                <Text style={{fontSize: 12}}><MaterialIcons name="place" size={16} color="black" />{"  " + news.diadiem}</Text>
+                                <Text style={{fontSize: 12}}><MaterialIcons name="place" size={16} color="black" />{"  "}{"  " + news.diadiem.length> 15 ? (news.diadiem.slice(0,15) + "...") : news.diadiem }</Text>
                                 <Text style={{fontSize: 12}}><Fontisto name="date" size={16} color="black" />{"  "}<TimeAgo time={news.ngaycapnhat} /></Text>
                             </View>
                         </View>

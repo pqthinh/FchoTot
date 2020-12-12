@@ -1,15 +1,10 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import SaveNewsScreen from './SaveNewsScreen';
 
-const BookmarkScreen = () => {
+const BookmarkScreen = ({navigation, route}) => {
     return (
-      <View style={styles.container}>
-        <Text>Bookmark Screen</Text>
-        <Button
-          title="Click Here"
-          onPress={() => alert('Button Clicked!')}
-        />
-      </View>
+      <SaveNewsScreen navigation={navigation} route= {"Tin đăng đã lưu"}/>
     );
 };
 

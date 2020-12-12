@@ -7,12 +7,17 @@ var currencyFormatter = require('currency-formatter')
 const heightImage =  120
 
 export default function ListNewsComponentRow({news}) {
+    const handleImage = (anh) =>{
+        var imgs = anh.trim().split(",")
+        if(imgs.length==0 || anh.length==0) return "https://image.shutterstock.com/image-vector/merchandise-line-icons-signs-set-600w-1371727865.jpg"
+        return imgs[0]
+    }
     return (
         <View style={styles.containerNewsPost}>
             <View>
                 <Image
                     style={styles.image}
-                    source={{uri: news.anh}}
+                    source={{uri: handleImage(news.anh)}}
                     title={news.ten} 
                 />
                 <View style={styles.count}>

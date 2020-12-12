@@ -39,6 +39,7 @@ const App = () => {
     isLoading: true,
     userName: null,
     userToken: null,
+    currentUser: null
   };
 
   // Chuyển giao diện màu
@@ -67,7 +68,7 @@ const App = () => {
   const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
   // Login reducer
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
-
+  // console.log(JSON.stringify(loginState))
   //Tab search header
   const [dataQuery, setDataQuery] = React.useState('')
   const [current, setCurrent] = React.useState(true)
@@ -85,10 +86,10 @@ const App = () => {
       } catch(e) {
         console.log(e);
       }
-      userToken0 =  AsyncStorage.getItem('currentuser')
+      userToken0 = await AsyncStorage.getItem('currentuser')
 
       console.log('user token: ', userToken0);
-      dispatch({ type: 'LOGIN', id: userName, token: userToken });
+      dispatch({ type: 'LOGIN', id: userName, token: userToken , currentUser: foundUser });
     },
     signOut: async() => {
       // SyncStorage.remove('current')

@@ -13,39 +13,54 @@ import ListNewsComponentRow from '../components/postHorizial'
 import EmptyScreen from './emptyScreen'
 
 const SaveNewsScreen = ({navigation, route}) =>{
-    const header = route.params.header
+    // alert(JSON.stringify(route))
+    const header = route.params?.header || route
     const [newsposted, setNewsposted] = useState([])
     const [view, setView] = useState(false)
-    const [currentUser, setCurrentUser] = useState({})
     const [loading, setLoading] = useState(false)
-    useEffect(()=> {
-        const id = setInterval(() => 
-            AsyncStorage.getItem('currentuser', (errs, res)=>{
-                if (!errs) {
-                    if (res !== null) {
-                        setCurrentUser(JSON.parse(res))
-                    }
-                }
-            })
-        , 15000);
-        return () => clearInterval(id);  
-    },[])
+    const [currentUser, setCurrentUser] = useState(null)
     // fetch data tin da lưu
     useEffect(()=>{
-        const id = setInterval(() => 
+        if(!newsposted) setNewsposted([])
+
+        if(!currentUser || typeof currentUser.id === "undefined" || currentUser.id === "undefined") {
+            console.log("user dc load")
+            loadUser()
+        }
+        if( typeof newsposted.length === "undefined" || !newsposted.length ) {
+            console.log("tin dc load")
             loadPost()
-        , 10000);
-        return () => clearInterval(id);  
-    },[])
-    console.log("test user " + JSON.stringify(currentUser))
-    console.log("test tin " + JSON.stringify(newsposted))
-    const loadPost = async () =>{
+        }
+        // loadPost()
+    },[currentUser])
+
+    const loadUser = async () =>{
+        try {
+            setLoading(true)
+            const jsonValue = await AsyncStorage.getItem('currentuser')
+            var temp = jsonValue != null ? JSON.parse(jsonValue) : null;
+            setCurrentUser(temp)
+            setLoading(false)
+        } catch(e) {
+            console.log(e)
+            setLoading(true)
+        }
+        
+    }
+    
+    const loadPost = async() =>{
         setLoading(true)
-        const news = await axios.get(`${baseURL}/mark?id_nguoiluutin=${currentUser.id}`)
-        await setNewsposted(news.data)
-        console.log("So luong tin yeu thich: " + news.data.length)
+        
+        if(!currentUser)  loadUser()
+
+        if(currentUser && typeof currentUser !== "undefined" && typeof currentUser.id !== "undefined") {
+            console.log("current user in load post: " + currentUser.id)
+            const news = await axios.get(`${baseURL}/mark?id_nguoiluutin=${currentUser?currentUser.id: 5}`)
+            console.log("query db: " + `${baseURL}/mark?id_nguoiluutin=${currentUser?currentUser.id: 5}`)
+            setNewsposted(news.data)
+        }
         setLoading(false)
-      }
+    }
     return (
         <View style={styles.container}>
             {/* Man hinh tin dang da luu / kham pha */}
@@ -66,18 +81,17 @@ const SaveNewsScreen = ({navigation, route}) =>{
                 {loading? <EmptyScreen /> :
                 <ScrollView>
                     {view?
-                        <ListNewsComponent danhmuc={header} newspost={newsposted}  navigation={navigation} /> :
+                        <ListNewsComponent danhmuc={header} newspost={typeof newsposted !== "undefined" ? newsposted : []}  navigation={navigation} /> :
                         <View style={{marginHorizontal: 10}}> 
                             <Text>{header}</Text>
-                            
-                        {
-                            newsposted.length == 0 ? <Text>Danh mục trống</Text>  :
-                            newsposted.map(x => (
-                                <TouchableOpacity key={x.id} onPress={()=> navigation.navigate("Details", {x})} >
-                                    <ListNewsComponentRow news={x} />
-                                </TouchableOpacity>
-                            ))
-                        }
+                            {   
+                                (newsposted === "undefined" || newsposted.length == 0 || typeof newsposted.length === "undefined") ? <Text>Danh mục trống</Text>  :
+                                newsposted?.map(x => (
+                                    <TouchableOpacity key={x.id} onPress={()=> navigation.navigate("Details", {news:x})} >
+                                        <ListNewsComponentRow news={x} />
+                                    </TouchableOpacity>
+                                ))
+                            }
                         </View>
                     }
                 </ScrollView>

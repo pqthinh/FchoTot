@@ -151,11 +151,6 @@ const SignInScreen = ({navigation}) => {
                 role: isSwitchOn ? "buyer": "seller"})
             .then(res=>{
                 console.log(res.status)
-                // if(res.statusCode !== 200) {
-                //     setError(res.message|| "có lỗi xảy ra")
-                //     return
-                // }
-                // console.log(res.data)
                 resp= res.data
                 resp.userToken = res.data.id
                 signIn(resp)
@@ -166,8 +161,6 @@ const SignInScreen = ({navigation}) => {
                 else setError("Có lỗi hệ thống xảy ra")
                 console.log(error)
             })
-            // console.log(data)
-            // signIn(resp)
         }
     }
 

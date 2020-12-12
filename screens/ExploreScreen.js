@@ -33,8 +33,8 @@ const ExploreScreen = ({navigation}) => {
         <List.Section>
           <List.Subheader>Lối tắt</List.Subheader>
 
-          <List.Item title={flatListData[0].name} left={() => <Avatar.Image  size={40} source={{uri: flatListData[0].icon}} />} onPress={()=> navigation.navigate("SaveNews")}/>
-          <List.Item title={flatListData[1].name} left={() => <Avatar.Image  size={40} source={{uri: flatListData[1].icon}} />} onPress={()=> navigation.navigate("Bookmarks")}/>
+          <List.Item title={flatListData[0].name} left={() => <Avatar.Image  size={40} source={{uri: flatListData[0].icon}} />} onPress={()=> navigation.navigate("SaveNews" ,{header: "Tin yêu thích"})}/>
+          <List.Item title={flatListData[1].name} left={() => <Avatar.Image  size={40} source={{uri: flatListData[1].icon}} />} onPress={()=> navigation.navigate("SaveNews", {header: "Tìm kiếm đã lưu"})}/>
           <List.Item title={flatListData[2].name} left={() => <Avatar.Image  size={40} source={{uri: flatListData[2].icon}} />} />
           <Divider />
           <List.Item title={flatListData[3].name} left={() => <Avatar.Image  size={40} source={{uri: flatListData[3].icon}} />} />

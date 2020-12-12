@@ -8,15 +8,26 @@ import { Divider  , Avatar, Card } from 'react-native-paper';
 import { FontAwesome5 } from '@expo/vector-icons';
 import TimeAgo from 'react-native-timeago';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-community/async-storage';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Fontisto } from '@expo/vector-icons';
+
+import axios from 'axios'
+import baseURL from '../http'
+
 var currencyFormatter = require('currency-formatter')
 
 const DetailsScreen = ({navigation, route}) => {
 
-  // alert(JSON.stringify(route.params))
-  // oke
+  // route chưa news
+  // oke // news là toàn bộ thông tin về tin đăng truyền qua route
   const news=  route.params.news
 
   const [images, setImages] = useState([])
+  const [currentUser, setCurrentUser] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [checknews, setChecknews] = useState(false)
+
   const handleImage = (anh) =>{
     var imgs = anh.trim().split(",")
     console.log(imgs.length)
@@ -27,7 +38,55 @@ const DetailsScreen = ({navigation, route}) => {
   
   useEffect(() => {
     setImages(handleImage(news.anh))
-  },[])
+    if(!currentUser) loadUser()
+    checkTindaluu()
+  },[currentUser, checknews])
+  
+  const loadUser = async () =>{
+    try {
+        setLoading(true)
+        const jsonValue = await AsyncStorage.getItem('currentuser')
+        var temp = jsonValue != null ? JSON.parse(jsonValue) : null;
+        setCurrentUser(temp)
+        setLoading(false)
+    } catch(e) {
+        console.log(e)
+        setLoading(true)
+    }
+    
+  }
+// /arrtindaluu/all?id_nguoiluutin=5
+  const checkTindaluu = async () =>{
+    if(!currentUser) loadUser()
+    else {
+      const id_nguoiluutin = currentUser.id
+      if(id_nguoiluutin && id_nguoiluutin!= news.idnguoiban) {
+        const res = await axios.get(`${baseURL}/arrtindaluu/all?id_nguoiluutin=${id_nguoiluutin}`)
+        var arr = res.data
+        // console.log("arr" + arr)
+        arr.map(x=> {
+          // console.log("sakj:" +  JSON.stringify(x) + "id tin :" + news.id)
+          if(x.id_tindang == news.id_tindang ) {
+            console.log("tin da lưu")
+            setChecknews(true) 
+          }
+          else setChecknews(false) 
+        })
+      }
+    }
+  }
+  const addToCart = async () => {
+    const id_nguoiluutin = currentUser.id
+    const id_tin =  news.id_tindang
+    if(id_nguoiluutin && id_nguoiluutin!= news.idnguoiban) {
+      const res = await axios.post(`${baseURL}/mark`, {id_tindang: id_tin, id_nguoiluutin: id_nguoiluutin})
+      alert(res.data.message)
+    }
+    else {
+      loadUser()
+      alert("Không thêm vào danh mục được")
+    }
+  }
 
     return (
       <View style={styles.container}>
@@ -48,7 +107,7 @@ const DetailsScreen = ({navigation, route}) => {
                     images={images}
                     customSlide={({ index, item, style, width }) => (
                         <View key={index} >
-                            <Image source={{ uri: item }} style={styles.customImage} />
+                            <Image source={{ uri: item?item : "https://image.shutterstock.com/image-vector/merchandise-line-icons-signs-set-600w-1371727865.jpg" }} style={styles.customImage} />
                         </View>
                     )}
                 />
@@ -58,12 +117,19 @@ const DetailsScreen = ({navigation, route}) => {
               <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center'}}>
                     <View> 
                     <Text style={{fontSize: 16, color: 'red'}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
-                      <Text><TimeAgo time={news.ngaycapnhat} /> </Text>
+                      <Text style={{fontSize: 12}}><MaterialIcons name="place" size={16} color="black" />{"  " + news.diadiem}</Text>
+                      <Text style={{fontSize: 12}}><Fontisto name="date" size={16} color="black" />{"  "}<TimeAgo time={news.ngaycapnhat} /></Text>
                     </View>
-                    <TouchableOpacity onPress={()=> alert("Them vao tin yeu thich")} style={{borderColor: "red", borderRadius: 10, borderWidth: 1, padding: 5, width: 100, flexDirection: 'row',  paddingHorizontal: 10, justifyContent: 'space-between'}}>
-                      <Text style={{color:'red'}}>Lưu tin</Text>
-                      <Ionicons name="ios-heart-empty" size={24} color="red" />
-                    </TouchableOpacity>
+                    {!checknews? 
+                    <TouchableOpacity onPress={()=> addToCart()} style={{borderColor: "red", borderRadius: 10, borderWidth: 1, padding: 5, width: 100, flexDirection: 'row',  paddingHorizontal: 10, justifyContent: 'space-between'}}>
+                        <Text style={{color:'red'}}>Lưu tin</Text>
+                        <Ionicons name="ios-heart-empty" size={24} color="red" />
+                      </TouchableOpacity>
+                      :
+                      <TouchableOpacity onPress={()=> alert("Tin đã được lưu")} style={{borderColor: "red", borderRadius: 10, borderWidth: 1, padding: 5, width: 100, flexDirection: 'row',  paddingHorizontal: 10, justifyContent: 'space-between', backgroundColor: 'red'}}>
+                        <Text style={{color:'#fff'}}>Đã lưu</Text>
+                        <Ionicons name="ios-heart-empty" size={24} color="#fff" />
+                    </TouchableOpacity>}
               </View>
             </View>
             <Divider />
@@ -80,10 +146,11 @@ const DetailsScreen = ({navigation, route}) => {
               />
             </View>
             <Divider />
-            <View style={{marginVertical: 10}}>
+            <View style={{marginVertical: 10, marginHorizontal: 20}}>
               <Text>
-               {news.describle? `${news.describle}` :  <Text style={{color: "red", alignContent: 'center', justifyContent: "center"}}>Chưa có thông tin miêu tả</Text>}
+               {news.describe? `${news.describe}` :  <Text style={{color: "red", alignContent: 'center', justifyContent: "center"}}>Chưa có thông tin miêu tả</Text>}
               </Text>
+              {/* <Text>{JSON.stringify(news)}</Text> */}
             </View>
 
           </ScrollView>
