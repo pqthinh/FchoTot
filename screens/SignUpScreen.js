@@ -136,7 +136,7 @@ const SignInScreen = ({navigation}) => {
     const SignUp = () =>{
         
         if(!data.check_textEmailChange || !data.check_textInputChange || !data.check_textPhoneChange || !data.password || !data.confirm_password)
-            setError("Bạn phải điền thiếu hoặc sai thông tin")
+            setError("Bạn điền thiếu hoặc sai thông tin")
         else if(data.password !== data.confirm_password){
             setError("Mật khẩu không khớp")
         } else {

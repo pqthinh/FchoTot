@@ -72,7 +72,7 @@ const PostNewsScreen = ({navigation, route }) =>{
         }
         return true
     }
-    const uploadImage = ()=> {
+    const uploadImage = (images)=> {
         // add anh vao form data
         var formData = new FormData()
         images.forEach(file => {
@@ -94,7 +94,7 @@ const PostNewsScreen = ({navigation, route }) =>{
     }
 
     // convert array link image to string
-    const linktext = () =>{
+    const linktext = async (link) =>{
         var text =""
         link.map(x=> text+= x+",")
         return text
@@ -105,14 +105,17 @@ const PostNewsScreen = ({navigation, route }) =>{
             alert("Phải chọn ít nhất một ảnh")
             return
         }
-        await uploadImage()
+        await uploadImage(images)
         console.log(link)
         // const textimage = linktext()
         // console.log(textimage)
-        news.anh = linktext()
+        news.anh = await linktext(link)
         console.log(news)
-        const res = await axios.post(`${baseURL}/tindang`, news)
-        console.log(res.data)
+        if(news.anh.length>0) {
+            const res = await axios.post(`${baseURL}/tindang`, news)
+            // console.log(res.data)
+            alert(`Tin đăng ${res.data.id_tindang} đang được chờ duyệt`)
+        }
     }
     return (
         <View style={styles.container}>
@@ -120,8 +123,9 @@ const PostNewsScreen = ({navigation, route }) =>{
                 <Feather name="x" size={24} color="black" onPress={()=> navigation.goBack()}/>
                 <Text > Tạo tin đăng bán</Text>
                 <Octicons name="eye" size={24} color="black" onPress={()=> {
-                        if(checkValidation)
-                            navigation.navigate("Preview", {params: {news}})
+                        // if(checkValidation)
+                        //     navigation.navigate("Preview", {params: {news}})
+                        alert("Chưa xem được tin trước")
                     }}/>
             </View>
             <View>

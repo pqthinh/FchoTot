@@ -1,9 +1,9 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 
-import PostNewsScreen from '../screens/PostNewsScreen';
-import DetailsScreen from '../screens/DetailsScreen'
-import PickerImage from '../screens/pickerimage';
+import PostNewsScreen from '../screens/PostNewsScreen'
+import PickerImage from '../screens/pickerimage'
+import PreviewNews from '../screens/PeviewNews'
 
 const PostStack = createStackNavigator();
 
@@ -12,7 +12,7 @@ const PostStackScreen = ({navigation}) => (
         headerShown: false
     }}>
         <PostStack.Screen name="Postnews" component={PostNewsScreen}/>
-        <PostStack.Screen name="Preview" component={DetailsScreen}/>
+        <PostStack.Screen name="Preview" component={PreviewNews}/>
         <PostStack.Screen name="pickerimage" component={PickerImage}/>
     </PostStack.Navigator>
 );

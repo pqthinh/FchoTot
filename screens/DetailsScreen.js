@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet , Image , Linking} from 'react-native';
+import { View, Text, StyleSheet , Image , Linking , Alert} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -22,11 +22,13 @@ const DetailsScreen = ({navigation, route}) => {
   // route chưa news
   // oke // news là toàn bộ thông tin về tin đăng truyền qua route
   const news=  route.params.news
+  // console.log(route.params)
 
   const [images, setImages] = useState([])
   const [currentUser, setCurrentUser] = useState(null)
   const [loading, setLoading] = useState(false)
   const [checknews, setChecknews] = useState(false)
+  const [scan, setScan] = useState(false)
 
   const handleImage = (anh) =>{
     var imgs = anh.trim().split(",")
@@ -60,7 +62,7 @@ const DetailsScreen = ({navigation, route}) => {
     if(!currentUser) loadUser()
     else {
       const id_nguoiluutin = currentUser.id
-      if(id_nguoiluutin && id_nguoiluutin!= news.idnguoiban) {
+      if(id_nguoiluutin && id_nguoiluutin!== news.idnguoiban && !scan && !checknews) {
         const res = await axios.get(`${baseURL}/arrtindaluu/all?id_nguoiluutin=${id_nguoiluutin}`)
         var arr = res.data
         // console.log("arr" + arr)
@@ -69,22 +71,61 @@ const DetailsScreen = ({navigation, route}) => {
           if(x.id_tindang == news.id_tindang ) {
             console.log("tin da lưu")
             setChecknews(true) 
+            return
           }
           else setChecknews(false) 
         })
       }
+      setScan(true)
     }
   }
   const addToCart = async () => {
     const id_nguoiluutin = currentUser.id
     const id_tin =  news.id_tindang
-    if(id_nguoiluutin && id_nguoiluutin!= news.idnguoiban) {
+    if(id_nguoiluutin && id_nguoiluutin!= news.idnguoiban && !checknews) {
       const res = await axios.post(`${baseURL}/mark`, {id_tindang: id_tin, id_nguoiluutin: id_nguoiluutin})
       alert(res.data.message)
+      setChecknews(true)
     }
     else {
       loadUser()
       alert("Không thêm vào danh mục được")
+    }
+  }
+
+  const reportTin = async()=>{
+    // kiem tra nguoi hien tai va nguoi dang tin
+    // console.log(news)
+    if(currentUser.id === news.idnguoiban) {
+      Alert.alert(
+        "Report news",
+        "Bạn muốn báo cáo tin này",
+        [
+          {
+            text: "tin đã được bán",
+            onPress: () => alert("đã báo cáo tin")
+          },
+          { text: "Hủy", onPress: () => alert("cancel"),
+            style: "cancel"
+          }
+        ],
+        { cancelable: false }
+      )
+    } else {
+      Alert.alert(
+        "Report news",
+        "Bạn muốn báo cáo tin này",
+        [
+          {
+            text: "Tin vi phạm",
+            onPress: () => alert("Đã report vi pham")
+          },
+          { text: "Hủy", onPress: () => alert("cancel"),
+            style: "cancel"
+          }
+        ],
+        { cancelable: false }
+      )
     }
   }
 
@@ -95,7 +136,7 @@ const DetailsScreen = ({navigation, route}) => {
           <View style={{flexDirection: 'row'}}>
             <Ionicons name="ios-heart-empty" style={{marginHorizontal: 10}} size={24} color="black" onPress={()=> alert("Them vao tin yeu thich")}/>
             <AntDesign name="sharealt" style={{marginHorizontal: 10}} size={24} color="black" onPress={()=> alert("Chia se tin")}/>
-            <Entypo name="dots-three-vertical" size={24} color="black" onPress={()=> alert("Bao cao")}/>
+            <Entypo name="dots-three-vertical" size={24} color="black" onPress={()=> reportTin()}/>
           </View>
         </View>
         <View style={{flex: 1}}>

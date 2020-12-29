@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text,  StyleSheet,TextInput, TouchableOpacity } from 'react-native';
 // import { List, Avatar , Divider, Paragraph, Title, Caption } from 'react-native-paper';
+// import baseURL from '../http'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+// import Axios from 'axios';
 
 const EditInforationScreen = ({navigation, route}) => {
     const [newp, setNewp] = useState("")
@@ -10,11 +12,13 @@ const EditInforationScreen = ({navigation, route}) => {
     const [op,setOp]= useState("")
     const {id, password} = route.params
     // console.log(id +" "+ password)
-    const handleNewP = () =>{
+    const handleNewP = async () =>{
       if(rp !== newp) alert("Bạn nhập lại mật khẩu không khớp")
-      if(newp === password || rp === password) alert("Không có sự thay đổi")
-      if(op !== password) alert("Bạn nhập sai mật khẩu cũ")
-      alert("Cập nhật mật khẩu thành công")
+      else if(newp === password || rp === password) alert("Không có sự thay đổi")
+      else if(op !== password) alert("Bạn nhập sai mật khẩu cũ")
+      else {
+        // const res = Axios.put(`${baseURL}/user/${id}`, {password: newp})
+        alert("Cập nhật mật khẩu thành công")}
     }
     return (
       <View style={styles.container}>
@@ -31,10 +35,11 @@ const EditInforationScreen = ({navigation, route}) => {
               borderColor: 'black',
               borderWidth: 1
             }}
-            keyboardType = 'email-address'
+            // keyboardType = 'password'
             placeholder = 'Nhập mật khẩu cũ'
             placeholderTextColor = 'grey'
             secureTextEntry={true}
+            passwordRules={5}
             value={op}
             onChangeText={(val) => setOp(val)}
             />
@@ -46,10 +51,11 @@ const EditInforationScreen = ({navigation, route}) => {
               borderColor: 'black',
               borderWidth: 1
             }}
-            keyboardType = 'email-address'
+            // keyboardType = 'password'
             placeholder = 'Nhập mật khẩu mới'
             placeholderTextColor = 'grey'
             secureTextEntry={true}
+            passwordRules={5}
             value={newp}
             onChangeText={(val) => setNewp(val)}
             />
@@ -61,7 +67,7 @@ const EditInforationScreen = ({navigation, route}) => {
                 borderColor: 'black',
                 borderWidth: 1
               }}
-              keyboardType = 'email-address'
+              // keyboardType = 'password'
               placeholder = 'Xác nhận lại mật khẩu'
               placeholderTextColor = 'grey'
               secureTextEntry={true}

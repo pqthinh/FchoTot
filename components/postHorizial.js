@@ -7,6 +7,7 @@ var currencyFormatter = require('currency-formatter')
 const heightImage =  120
 
 export default function ListNewsComponentRow({news}) {
+    // console.log(news)
     const handleImage = (anh) =>{
         var imgs = anh.trim().split(",")
         if(imgs.length==0 || anh.length==0) return "https://image.shutterstock.com/image-vector/merchandise-line-icons-signs-set-600w-1371727865.jpg"
@@ -33,7 +34,7 @@ export default function ListNewsComponentRow({news}) {
                 <Text style={{fontSize: 20, color: 'red'}}>{currencyFormatter.format(news.giaban, { code: 'VND' })}</Text>
                 <Text style={{fontSize: 12, marginTop: 20}}>{news.name }</Text>
                 <Text style={{fontSize: 12}}>{news.diadiem}</Text>
-                <Text style={{fontSize: 12}}><TimeAgo time={news.ngayban} /></Text>
+                <Text style={{fontSize: 12}}><TimeAgo time={news.ngaydangtin} /></Text>
             </View>
         </View>
     )
